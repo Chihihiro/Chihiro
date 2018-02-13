@@ -3,16 +3,12 @@ from sqlalchemy import create_engine
 import pandas as pd
 import re
 import time
-from History.iosjk import to_sql
+from New.engine import *
 
 wind.start()    # 启动wind
 now = time.strftime("%Y-%m-%d")
 
-engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-engine2 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
-engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl_private', ),connect_args={"charset": "utf8"}, echo=True, )
-
-wind_ids=pd.read_sql('select DISTINCT fund_id from d_fund_nv WHERE source_id=020007 ',engine3)
+wind_ids=pd.read_sql('select DISTINCT fund_id from d_fund_nv WHERE source_id=020007 ',engine_crawl_private)
 dds=wind_ids["fund_id"].tolist()
 print(dds)
 
@@ -62,7 +58,7 @@ for i in dds:
         QQ = ('020007','0')
         qq=q+QQ
         DF.append(qq)
-        cc=pd.read_sql("select fund_ID from fund_id_match WHERE source_ID='{}'".format(i),engine2).iloc[0,0]
+        cc=pd.read_sql("select fund_ID from fund_id_match WHERE source_ID='{}'".format(i),engine_base).iloc[0,0]
         sqq = ('3','第三方','13','wind',cc)
         source = q+sqq
         DF_SOURCE.append(source)
@@ -82,6 +78,6 @@ dataframe2 = df2
 
 
 
-to_sql("d_fund_nv", engine3, dataframe, type="update")
-to_sql("fund_nv_data_source", engine2, dataframe2, type="update")
+to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
+to_sql("fund_nv_data_source", engine_base, dataframe2, type="update")
 

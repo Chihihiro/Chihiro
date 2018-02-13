@@ -1,7 +1,7 @@
 from WindPy import w as wind
 import re
 import time
-
+from New.engine import *
 
 wind.start()    # 启动wind
 now = time.strftime("%Y-%m-%d")
@@ -32,7 +32,7 @@ def crawl_benchmark(id):    # 定义方法
 
 
 # --------------------------------------------------------------------------------------------------------------------io文件
-from History.engine import *
+
 
 # ----------------------------------------------------------------------------------------------------------------------io文件
 def crawl():
@@ -53,7 +53,6 @@ def crawl():
     df.columns = ["fund_id","statistic_date", "nav", "added_nav", "source_code", "source", "data_source","data_source_name"]
     print(df)
     dataframe=df
-    # engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
 
     print(dataframe)
     # df = dataframe.iloc[:, [0, 1,2,3]]
@@ -64,9 +63,9 @@ def crawl():
     is_checked = input("输入1来确认入库\n")
 
     if is_checked == "1":
-        engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd','jr_admin_qxd','182.254.128.241',4171,'base', ), connect_args={"charset": "utf8"},echo=True,)
 
-        to_sql("fund_nv_data_source", engine, dataframe, type="update")
+
+        to_sql("fund_nv_data_source", engine_base, dataframe, type="update")
         # to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
     else:
         pass
