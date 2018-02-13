@@ -1,8 +1,5 @@
 import pandas as pd
-import xlrd
-from iosjk import to_sql
 from sqlalchemy import create_engine
-import datetime,time
 import numpy as np
 import re
 

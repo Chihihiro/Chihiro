@@ -10,7 +10,8 @@ import http.cookiejar
 import urllib.request, urllib.parse, urllib.error
 import http.cookiejar
 import socket
-login_url = 'https://passport.jinfuzi.com/passport/user/login'
+# login_url = 'https://passport.jinfuzi.com/passport/user/login'
+login_url = 'https://passport.jinfuzi.com/passport/user/doLogin.html'
 # post_URL = 'http://www.shaidanwang.cn/alertLogin.do?shoveDate{}'.format(str(time.time())[0:10])
 post_URL = 'https://passport.jinfuzi.com/passport/user/doLogin.html'
 print(post_URL)

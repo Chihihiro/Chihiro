@@ -1,10 +1,7 @@
-from sqlalchemy import create_engine
-import sys
 import os
 import pandas as pd
-import re
 import shutil
-from iosjk import to_sql
+from History.iosjk import to_sql
 from sqlalchemy import create_engine
 
 #### SETTING HERE ####

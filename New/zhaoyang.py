@@ -153,8 +153,9 @@ def second():
         JR=i[0]
         url = 'https://www.12345fund.com/api/v1/fill_fund/get_basic_data?fund_id={}&token={}'.format(q, token)
         print(url)
-        r = requests.get(url).content.decode('utf8')
+        # r = requests.get(url).content.decode('utf8')
         try:
+            r = requests.get(url).content.decode('utf8')
             n = re.search('"fund_name":"(.+?)"', r, re.DOTALL).group(1)
             K = str(n)
             print(K)
@@ -173,17 +174,11 @@ def second():
 
 
 crawl()
-
 first()
-
-# second()
+second()
 
 
 print('done')
-
-
-
-
 
 
 

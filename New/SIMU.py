@@ -42,6 +42,12 @@ def sanfang():
     df_source_copy2["version"]=now
     to_sql("zhaoyang", engine5, df_source_copy2, type="update")
 
+    df_standard_copy2=pd.read_sql("SELECT * FROM (SELECT fund_id,statistic_date  FROM fund_nv_data_standard_copy2 WHERE \
+     fund_id in ({}) ORDER BY statistic_date DESC ) AS T GROUP  BY T.fund_id ".format(JR),engine_base)
+    df_standard_copy2.rename(columns={"statistic_date": "nv_standard_copy2"}, inplace=True)
+    df_standard_copy2["version"]=now
+    to_sql("zhaoyang", engine5, df_standard_copy2, type="update")
+
 
     df_jfz=pd.read_sql("SELECT * FROM (SELECT fund_id,statistic_date FROM fund_nv_data_source_copy2 WHERE source_id='020002'\
     and fund_id in ({}) ORDER BY statistic_date DESC ) AS T GROUP  BY T.fund_id ".format(JR),engine_base)
@@ -58,10 +64,8 @@ def sanfang():
     print("三方日期导入")
 
 
-
-
 def daochu():
-    df = pd.read_sql("SELECT fund_id,fund_name,zhaoyang,standard,nv_source,nv_source_copy2,jinfuzi,haomai\
+    df = pd.read_sql("SELECT fund_id,fund_name,zhaoyang,standard,nv_source,nv_source_copy2,nv_standard_copy2,jinfuzi,haomai\
                         FROM zhaoyang WHERE  version = '{}' AND zhaoyang is NOT NULL ".format(now), engine5)
 
     df["differ_day"] = (df["zhaoyang"] - df["standard"])
@@ -69,11 +73,11 @@ def daochu():
     aa = df[df.differ_day > 0]
     a = len(aa)
     # a=len(df["differ_day"]<0)
-    df["速度慢的基金数量standard"] = None
+    df["standard慢的"] = None
     df.iloc[0, -1] = a
     bb = df[df.differ_day < 0]
     b = len(bb)
-    df["提前更新数量standard"] = None
+    df["standard提前更的"] = None
     df.iloc[0, -1] = b
 
     df["differ_day_copy2"] = (df["zhaoyang"] - df["nv_source_copy2"])
@@ -89,6 +93,18 @@ def daochu():
     df["copy2提前更的"] = None
     df.iloc[0, -1] = d
 
+    df["differ_day_standard_copy2"] = (df["zhaoyang"] - df["nv_standard_copy2"])
+    df["differ_day_standard_copy2"] = df["differ_day_standard_copy2"].apply(lambda x: x.days)
+    ss = df[df.differ_day_standard_copy2 > 0]
+    s = len(ss)
+    # a=len(df["differ_day"]<0)
+    df["standard_copy2速度慢的"] = None
+    df.iloc[0, -1] = s
+    dd = df[df.differ_day_standard_copy2 < 0]
+    f = len(dd)
+    df["standard_copy2提前更的"] = None
+    df.iloc[0, -1] = f
+
 
     df["differ_day_source"] = (df["zhaoyang"] - df["nv_source"])
     df["differ_day_source"] = df["differ_day_source"].apply(lambda x: x.days)
@@ -103,21 +119,33 @@ def daochu():
     df["source提前更的"] = None
     df.iloc[0, -1] = z
 
+
+
+
+
     now2 = time.strftime("%Y%m%d%H%M")
-    df.to_csv("C:\\Users\\63220\\Desktop\\私募净值追踪{}.csv".format(now2))
+    df.to_excel("E:\\SVN目录\\数据部_\\质量管理\\净值质量跟踪\\私募报表\\私募净值追踪{}.xlsx".format(now2))
     print("导出完毕")
 
+    #
+    # book = xlsxwriter.Workbook("C:\\Users\\63220\\Desktop\\插入测试.xlsx")
+    # sheet = book.add_worksheet('Sheet1')
+    # sheet.insert_image('Q5', 'C:\\Users\\63220\\PycharmProjects\\QQX\\ceshi.png')
+    #
+    #
+    #
 
 
 
-
-# df_limit=pd.read_sql("select fund_id,fund_name from zhaoyang WHERE version='{}'".format(now),engine5)
-# df_JR=df_limit["fund_id"].tolist()
-# JR='\''+"','".join(df_JR)+'\''
-# df_name=df_limit["fund_name"].tolist()
-
-
-to_ku()
+#
+to_ku()#"样本1000只固定"
 sanfang()
+#
+# from zhaoyang import *
 
 # daochu()
+#
+# writer = pd.ExcelWriter("C:\\Users\\63220\\Desktop\\插入测试.xlsx")
+# df.to_excel(writer, 'Sheet1')
+# writer.save()
+

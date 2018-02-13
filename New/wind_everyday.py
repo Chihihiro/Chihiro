@@ -19,7 +19,7 @@ print(dds)
 
 def crawl_benchmark(id):    # 定义方法
     tmp = wind.wsd(id, "NAV_date,nav,NAV_acc,NAV_adj,fund_fullname", "ED", now, "")# 万得API用法
-    a=wind.wsd("111058.SZ", "creditrating,amount,rate_latest", "2014-04-19", "2017-12-25", "")
+    # a=wind.wsd("111058.SZ", "creditrating,amount,rate_latest", "2014-04-19", "2017-12-25", "")
     df = pd.DataFrame(tmp.Data)   # 用结果(list)去构造一个DataFrame二维表
     df = df.T  # 把表转置
     print(df)
@@ -32,13 +32,18 @@ def crawl_benchmark(id):    # 定义方法
         E = df.iloc[0, 4]
         return (id,R, B, C,D,E)
     else:
-        r = re.findall(r"(.+?) ", A)
-        R = r[0]
-        B = str(df.iloc[0, 1])
-        C = str(df.iloc[0, 2])
-        D = df.iloc[0, 3]
-        E = df.iloc[0, 4]
-        return (id,R, B, C,D,E)
+        try:
+            r = re.findall(r"(.+?) ", A)
+            R = r[0]
+            B = str(df.iloc[0, 1])
+            C = str(df.iloc[0, 2])
+            D = df.iloc[0, 3]
+            E = df.iloc[0, 4]
+            return (id,R, B, C,D,E)
+        except BaseException:
+            print("报错")
+        else:
+            pass
 
 
 # x='XT1703378.XT'

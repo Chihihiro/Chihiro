@@ -1,4 +1,6 @@
-from History.engine import *
+import pandas as pd
+from sqlalchemy import create_engine
+
 
 engine_base = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
 

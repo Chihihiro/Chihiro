@@ -1,3 +1,4 @@
+from History.iosjk import to_sql
 from History.engine import *
 
 # -------------------------------------------------------------------------朝阳
@@ -45,18 +46,19 @@ def to_zyjz(fund_id):
 # df=pd.read('C:\\Users\\63220\\Desktop\\id001.txt')
 #
 #
-df = pd.read_excel('C:\\Users\\63220\Desktop\\201814.xls')
+df = pd.read_excel('C:\\Users\\63220\Desktop\\私募id_match导入0209.xls')
 # df["jfz_timeid"]=df["jfz_timeid"].apply(lambda x:'%.0f' % x if x is not None else None)
-# df["source"]=df["source"].apply(lambda x: '0'+str(x))
+df["source"]=df["source"].apply(lambda x: '0'+str(x))
 # df["data_source"]=df["data_source"].apply(lambda x: '0'+str(x))
-# df["matched_id"]=df["matched_id"].apply(lambda x: '00'+str(x))
+# df["matched_id"]=df["matched_id"].apply(lambda x: '0'+str(x))
 # df["source_id"]=df["source_id"].apply(lambda x: '00'+str(x))
-df["source_id"]=df["source_id"].apply(lambda x: '0'+str(x))
+# df["source_id"]=df["source_id"].apply(lambda x: '0'+str(x))
 # df['num_employee'] = df['num_employee'].apply(lambda x: '%.2f' % x)
 # df["confirmed"]=df["confirmed"].apply(lambda x: '00'+str(x))
 # df["fund_id"]=df["fund_id"].apply(lambda x: "%06d" % x)
 # df.rename(columns={"is_used":"is_updata"},inplace=True)
-
+# df["matched_id"]=df["matched_id"].apply(lambda x: '0'+str(x))
+# df["version"]=2018020511
 # df["target_table"]="fund_nv_data_standard"
 # print(df)
 # exit()
@@ -76,7 +78,7 @@ if is_checked == "1":
     engine_lijia = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base_public', ), connect_args={"charset": "utf8"}, echo=True, )
     engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
     engine_config_private = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'config_private', ),connect_args={"charset": "utf8"}, echo=True, )
-    to_sql("sync_source", engine_config_private, dataframe, type="update")
+    to_sql("id_match", engine_base, dataframe, type="update")
 else:
     pass
 

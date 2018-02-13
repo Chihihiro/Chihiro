@@ -4,15 +4,6 @@ from History.engine import *
 engine_base = create_engine(
             "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),
             connect_args={"charset": "utf8"}, echo=True, )
-# def sortlist(list0):#---------------------删除重复基金
-#     list0.sort()
-#     last=list0[-1]
-#     for i in range(len(list0)-2,-1,-1):
-#         if list0[i]==last:
-#             list0.remove(list0[i])
-#         else:
-#             last=list0[i]
-#     return list0
 
 def to_ku(DF):
     if DF.empty:
@@ -53,10 +44,10 @@ df=pd.read_sql("SELECT * FROM id_match as a \
 #
 #
 #
-# df2=pd.read_sql("SELECT * FROM id_match as a \
-#                 LEFT JOIN (SELECT fund_id,MAX(VERSION),fund_name_amac,fund_issue_org_amac FROM crawl_private.x_fund_info_fundaccount  GROUP BY fund_id) as b\
-#                 on a.source_id=b.fund_id WHERE a.source in (010002) AND a.is_used=1 and a.matched_id\
-#                 in (SELECT fund_id FROM fund_info); -- funt_account全量",engine_base)
+df2=pd.read_sql("SELECT * FROM id_match as a \
+                LEFT JOIN (SELECT fund_id,MAX(VERSION),fund_name_amac,fund_issue_org_amac FROM crawl_private.x_fund_info_fundaccount  GROUP BY fund_id) as b\
+                on a.source_id=b.fund_id WHERE a.source in (010002) AND a.is_used=1 and a.matched_id\
+                in (SELECT fund_id FROM fund_info); -- funt_account全量",engine_base)
 
 
 

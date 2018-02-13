@@ -74,8 +74,10 @@ def pu_all3():
 
 
 def daochu():
+    shanchu="'519513',	'002437',	'003859',	'001368',	'004383',	'004384',	'004704',	'001568',	'002239',	'004539',	'004540',	'161630',	'511890','519131'"
+
     df = pd.read_sql("SELECT version,fund_id,fund_name,statistic_date,nav,added_nav,statistic_date_wind,nav_wind,added_nav_wind\
-                    FROM fund_nv WHERE  version = '{}'".format(now), engine5)
+                    FROM fund_nv WHERE  version = '{}' AND fund_id NOT IN ({})".format(now,shanchu), engine5)
 
     df["differ_day"] = (df["statistic_date"] - df["statistic_date_wind"])
     df["differ_day"] = df["differ_day"].apply(lambda x: x.days)
@@ -91,7 +93,7 @@ def daochu():
     df["提前更新数量"] = None
     df.iloc[0, -1] = b
 
-    df.to_csv("C:\\Users\\63220\\Desktop\\公募净值追踪{}.csv".format(now2))
+    df.to_csv("E:\\SVN目录\\数据部_\\质量管理\\净值质量跟踪\\公募报表\\公募净值追踪{}.csv".format(now2))
     print("导出完毕")
 
 
@@ -110,6 +112,7 @@ def main():
     pu_all()
     pu_all3()
     daochu()
+    print(now2)
 
 if __name__ == "__main__":
      main()

@@ -1,4 +1,3 @@
-from History.iosjk import to_sql
 from History.engine import *
 
 
@@ -40,7 +39,7 @@ def del_fund_max(fund_id):
 
 
 def del_fund_min(fund_id):
-    engine_base.execute("DELETE from fund_nv_updata_source where fund_id='{a}';\
+    engine_base.execute("UPDATE fund_nv_updata_source SET is_updata=0 where fund_id='{a}';\
     DELETE from fund_nv_data_standard where fund_id='{a}';\
     DELETE from fund_type_mapping where fund_id='{a}';\
     DELETE from fund_type_source where fund_id='{a}';\
@@ -52,8 +51,8 @@ def del_fund_min(fund_id):
     DELETE FROM fund_id_match WHERE fund_id='{a}';\
     DELETE FROM fund_info_aggregation WHERE fund_id='{a}';\
     DELETE FROM fund_nv_data_source WHERE fund_id='{a}';\
-    UPDATE id_match  set is_used,is_del=1 = 0 WHERE matched_id='{a}';".format(a=fund_id))
-    engine_crawl_private.execute("DELETE FROM y_fund_nv where fund_id='{}'".format(fund_id))
+    UPDATE id_match  set is_used=0,is_del=1 WHERE matched_id='{a}';".format(a=fund_id))
+    engine_crawl_private.execute("DELETE FROM y_fund_info where fund_id='{}'".format(fund_id))
 
 
 def combine_fund(JR,D_JR):
@@ -80,32 +79,22 @@ def show_info(JR,D_JR):
 
 
 
+D_JR="JR160346"
+JR="JR109397"
+# r=pd.read_sql("select * from fund_info where fund_id in ('{}','{}')".format(JR,D_JR),engine_base)
 
-
-
-#
-# D_JR="JR999558"
-# # JR="JR044733"
-# del_fund(D_JR)
-
-
-
-D_JR="JR001050"
-JR="JR057851"
-r=pd.read_sql("select * from fund_info where fund_id in ('{}','{}')".format(JR,D_JR),engine_base)
-
-
+del_fund_min(JR)
 
 combine_fund(JR,D_JR)
 
 
 
 
-df = pd.read_excel('C:\\Users\\63220\Desktop\\D_JR.xls')
-c=to_list(df)
-
-for i in c:
-    D_JR=i[0]
-    JR=i[1]
-    print(D_JR,JR)
-    combine_fund(JR, D_JR)
+# df = pd.read_excel('C:\\Users\\63220\Desktop\\D_JR.xls')
+# c=to_list(df)
+#
+# for i in c:
+#     D_JR=i[0]
+#     JR=i[1]
+#     print(D_JR,JR)
+#     combine_fund(JR, D_JR)
