@@ -63,8 +63,6 @@ def crawl():
     is_checked = input("输入1来确认入库\n")
 
     if is_checked == "1":
-
-
         to_sql("fund_nv_data_source", engine_base, dataframe, type="update")
         # to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
     else:

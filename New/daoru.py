@@ -16,8 +16,7 @@ def to_zyjz(fund_id):
     print(dataframe)
     is_checked = input("输入1来确认入库\n")
     if is_checked == "1":
-        engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_4','jr_admin_4','182.254.128.241',4171,'base', ), connect_args={"charset": "utf8"},echo=True,)
-        to_sql("fund_nv_data_source", engine, dataframe, type="update")
+        to_sql("fund_nv_data_source", engine5, dataframe, type="update")
     else:
         pass
 # id="JR019585"
@@ -72,12 +71,7 @@ print(df)
 dataframe=df
 is_checked = input("输入1来确认入库\n")
 if is_checked == "1":
-    engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd','jr_admin_qxd','182.254.128.241',4171,'crawl_private', ), connect_args={"charset": "utf8"},echo=True,)
-    engine_base = create_engine( "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171,'base', ), connect_args={"charset": "utf8"}, echo=True, )
-    engine2 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'config_private', ),connect_args={"charset": "utf8"}, echo=True, )
-    engine_lijia = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base_public', ), connect_args={"charset": "utf8"}, echo=True, )
     engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-    engine_config_private = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'config_private', ),connect_args={"charset": "utf8"}, echo=True, )
     to_sql("id_match", engine_base, dataframe, type="update")
 else:
     pass

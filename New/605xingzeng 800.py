@@ -1,5 +1,5 @@
 import pandas as pd
-from History.iosjk import to_sql
+from New.iosjk import to_sql
 from sqlalchemy import create_engine
 
 engine2 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
