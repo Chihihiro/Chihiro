@@ -1,15 +1,12 @@
 import pandas as pd
-from History.iosjk import to_sql
+from iosjk import to_sql
 from sqlalchemy import create_engine
 import time
 import numpy as np
-
+from engine import *
 now = time.strftime("%Y-%m-%d")
 now1=time.time()
 print(now1)
-engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl', ),connect_args={"charset": "utf8"}, echo=True, )
-engine2 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
 
 df=pd.read_excel('C:\\Users\\63220\\Desktop\\fund_id11-13.xls')
 print(df)
@@ -21,8 +18,8 @@ for c in cc:
     fund_ID=c[0]
     source_ID=c[1]
     print(fund_ID)
-    df_max=pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name,statistic_date,nav FROM fund_nv_data_source WHERE fund_id IN ('{}') and data_source<>3 ORDER BY statistic_date DESC ) AS T GROUP  BY T.fund_id".format(fund_ID),engine3)
-    cl_max=pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name,statistic_date,nav FROM d_fund_nv_data WHERE fund_id IN ('{}') and source_code=3 ORDER BY statistic_date DESC ) AS T GROUP  BY T.fund_id".format(source_ID),engine)
+    df_max=pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name,statistic_date,nav FROM fund_nv_data_source WHERE fund_id IN ('{}') and data_source<>3 ORDER BY statistic_date DESC ) AS T GROUP  BY T.fund_id".format(fund_ID),engine_base)
+    cl_max=pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name,statistic_date,nav FROM d_fund_nv_data WHERE fund_id IN ('{}') and source_code=3 ORDER BY statistic_date DESC ) AS T GROUP  BY T.fund_id".format(source_ID),engine_crawl)
     date=df_max['statistic_date'].tolist()
     cl=cl_max['statistic_date'].tolist()
     cl2=cl_max.iloc[0,2]
@@ -58,9 +55,6 @@ df_all.columns =["fund_id","data_source","is_updata"]
 print(df_all)
 is_checked = input("输入1来确认入库\n")
 if is_checked == "1":
-    # engine = create_engine(
-    #     "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),
-    #     connect_args={"charset": "utf8"}, echo=True, )
     engine_TEST = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
     to_sql("fund_nv_updata_source", engine_TEST, df_all, type="update")
 else:

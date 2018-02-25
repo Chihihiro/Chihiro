@@ -1,4 +1,4 @@
-from History.engine import *
+from engine import *
 
 def df_fundaccount():
     df_fundaccount = pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name_amac\
@@ -86,10 +86,6 @@ df["futures"]=None
 df.iloc[0, -1] =len(df4["futures_id"])
 df["fund_name"]=None
 df.iloc[0, -1] =len(df6["fund_full_name"])
-
-
-
-
 
 
 

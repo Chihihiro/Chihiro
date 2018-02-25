@@ -1,7 +1,7 @@
 from WindPy import w as wind
 import re
 import time
-from New.engine import *
+from engine import *
 
 wind.start()    # 启动wind
 now = time.strftime("%Y-%m-%d")

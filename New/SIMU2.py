@@ -1,4 +1,4 @@
-from History.engine import *
+from engine import *
 import time
 
 now = time.strftime("%Y-%m-%d")
@@ -65,8 +65,7 @@ def sanfang():
 
 def daochu():
     df = pd.read_sql("SELECT fund_id,fund_name,zhaoyang,standard,nv_source,nv_source_copy2,nv_standard_copy2,jinfuzi,haomai\
-                        FROM zhaoyang WHERE  version = '{}' AND zhaoyang is NOT NULL ".format(now), engine5)
-
+                        FROM zhaoyang WHERE  version = '{}' ".format(now), engine5)
     df["differ_day"] = (df["zhaoyang"] - df["standard"])
     df["differ_day"] = df["differ_day"].apply(lambda x: x.days)
     aa = df[df.differ_day > 0]

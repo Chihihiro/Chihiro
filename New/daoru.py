@@ -1,5 +1,5 @@
 from New.iosjk import to_sql
-from New.engine import *
+from engine import *
 
 # -------------------------------------------------------------------------朝阳
 def to_zyjz(fund_id):

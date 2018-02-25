@@ -1,20 +1,10 @@
-from History.iosjk import to_sql
-from History.engine import *
-
-engine_base = create_engine(
-            "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),
-            connect_args={"charset": "utf8"}, echo=True, )
+from iosjk import to_sql
+from engine import *
 
 def to_ku(DF):
     if DF.empty:
         print("df为空")
     else:
-        engine_base = create_engine(
-            "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),
-            connect_args={"charset": "utf8"}, echo=True, )
-
-        engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'test', ),
-                                connect_args={"charset": "utf8"}, echo=True, )
         to_sql("fund_org_mapping", engine_base, DF, type="update")
 
 def org_type(DF,code):

@@ -1,6 +1,6 @@
 from WindPy import w as wind
 from sqlalchemy import create_engine
-from History.iosjk import *
+from New.iosjk import *
 import time
 now = time.strftime("%Y-%m-%d")
 
@@ -45,11 +45,9 @@ now = time.strftime("%Y-%m-%d")
 
 
 
-engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-engine2 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
-engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl_private', ),connect_args={"charset": "utf8"}, echo=True, )
+from engine import *
 
-fund_ids=pd.read_sql('select wind_id from wind_date where update_time like "2017-11-03 %%"',engine)
+fund_ids=pd.read_sql('select wind_id from wind_date where update_time like "2017-11-03 %%"',engine_base)
 dds=fund_ids["wind_id"].tolist()
 print(dds)
 # vv=fund_ids.tolist()
@@ -63,10 +61,10 @@ for dd in dds:
 
 
 
-    start=pd.read_sql('select start_date from wind_date WHERE wind_id LIKE "{fid}"'.format(fid=dd), engine).iloc[0,0].strftime("%Y-%m-%d")
+    start=pd.read_sql('select start_date from wind_date WHERE wind_id LIKE "{fid}"'.format(fid=dd), engine5).iloc[0,0].strftime("%Y-%m-%d")
     print(start)
     # print(fund_id)
-    fund_name = pd.read_sql('select fund_name from fund_info WHERE fund_id IN (select fund_ID from fund_id_match WHERE source_ID LIKE "{fid}")'.format(fid=dd), engine2).iloc[0, 0]
+    fund_name = pd.read_sql('select fund_name from fund_info WHERE fund_id IN (select fund_ID from fund_id_match WHERE source_ID LIKE "{fid}")'.format(fid=dd), engine_base).iloc[0, 0]
     print(fund_name)
 
     wind.start()
@@ -81,7 +79,7 @@ for dd in dds:
     df['adjusted_nav'] = df['adjusted_nav'].apply(lambda x: '%.4f' % x)
     dataframe = df.drop_duplicates(['statistic_date'])
     print(dataframe)
-    to_sql("d_fund_nv", engine3, dataframe, type="update")
+    to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
     # is_checked = input("输入1来确认入库\n")
     # if is_checked == "1":
     #     # engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
