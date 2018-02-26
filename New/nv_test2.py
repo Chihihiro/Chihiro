@@ -1,6 +1,7 @@
 from engine import *
 
-
+a=7*60*60
+time.sleep(a)
 engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'base.test', ),
                         connect_args={"charset": "utf8"}, echo=False, )
 # to_sql("market_info", engine_base, dataframe, type="update")
