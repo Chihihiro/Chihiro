@@ -1,7 +1,7 @@
 # _*_ coding: utf-8 _*_
-from History.iosjk import to_sql
+from iosjk import to_sql
 # from tieba import *
-from History.engine import *
+from engine import *
 
 engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
 engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd','jr_admin_qxd','182.254.128.241',4171,'crawl_private', ), connect_args={"charset": "utf8"},echo=True,)
@@ -45,7 +45,7 @@ def bian():
 
 def timeshow():
     all=[]
-    a=dateRange("2018-02-07","2018-02-08")
+    a=dateRange("2018-02-14","2018-02-26")
     for i in a:
         q=re.sub(r'2018-', '18', i)
         w=re.sub(r'-', '', q)
@@ -53,7 +53,7 @@ def timeshow():
     return all
 
 
-from History.tieba import *
+from New.tieba import *
 # def job2():
 # san2= bian()
 san2=timeshow()                           #~~~~~~~~~~~~~~~~可在上面固定日期

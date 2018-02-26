@@ -1,4 +1,4 @@
-from History.engine import *
+from engine import *
 
 
 engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'base.test', ),
@@ -124,10 +124,12 @@ def crawl(list):
             # c_1["is_abnormal"]="0"
             # to_sql("fund_nv_data_standard", engine5, c_1, type="update")
             try:
-                c2["nnn"] = (c2["nav"] - c2["added_nav"]).round(4)
-                c2["ccc"] = (c2["added_nav"] / c2["nav"]).round(4)
-                cnt = c2["nnn"].round(4).value_counts()
-                ccc = c2["ccc"].round(4).value_counts()
+                c2["nnn"] = round((c2["added_nav"] - c2["nav"]),3)
+                c2["ccc"] = round((c2["added_nav"] / c2["nav"]),3)
+                # c2["nnn"] = c2["nav"] - c2["added_nav"]
+                # c2["ccc"] = c2["added_nav"] / c2["nav"]
+                cnt = c2["nnn"].value_counts()
+                ccc = c2["ccc"].value_counts()
                 # cnt = c2["nnn"].value_counts()
                 # cnt[cnt < cnt.mean()]
                 y = cnt[cnt <= 1].index
@@ -220,10 +222,18 @@ def len_JR():
     JR_all = pd.read_sql("select DISTINCT fund_id FROM fund_nv_data_standard", engine5)
     bb = np.array(JR_all)  # np.ndarray()
     vv = bb.tolist()  # list
-    all=[]
-    while len(vv)>0:
-        num= vv.pop()*10
-        all.append(num)
+    ALL=[]
+    for i in vv:
+        for o in i:
+            ALL.append(o)
+
+    a=len(ALL)
+    b=int(a/10)
+    all = []
+    for i in range(b):
+        a=ALL[i*10:(i*10+10)]
+        all.append(a)
+    all.append(ALL[b*10:])
     return all
 
 

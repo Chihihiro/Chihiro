@@ -51,7 +51,7 @@ get_response = opener.open(get_request)
 print(get_response.read().decode())
 
 print ('cookies 采集')
-data = open('C:\\Users\\63220\\PycharmProjects\\QQX\\cookie_jar.txt').read()
+data = open('C:\\Users\\63220\\PycharmProjects\\QQX\\Chihiro\\New\\cookie_jar.txt').read()
 print(data)
 
 # exit()
