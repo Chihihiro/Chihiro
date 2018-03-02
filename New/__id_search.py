@@ -45,7 +45,7 @@ def bian():
 
 def timeshow():
     all=[]
-    a=dateRange("2018-02-14","2018-02-26")
+    a=dateRange("2018-02-25","2018-02-26")
     for i in a:
         q=re.sub(r'2018-', '18', i)
         w=re.sub(r'-', '', q)

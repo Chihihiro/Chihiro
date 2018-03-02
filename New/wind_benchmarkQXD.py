@@ -44,13 +44,13 @@ def crawl():
         if q[1] =="None":
             pass
         else:
-            Q=(3,'第三方',13,'Wind')
+            Q=('020007',1,0)
             qq=q+Q
 
             DF.append(qq)
     print(DF)
     df = pd.DataFrame(DF)
-    df.columns = ["fund_id","statistic_date", "nav", "added_nav", "source_code", "source", "data_source","data_source_name"]
+    df.columns = ["fund_id","statistic_date", "nav", "added_nav", "source_id", "is_used","is_del"]
     print(df)
     dataframe=df
 
@@ -63,8 +63,8 @@ def crawl():
     is_checked = input("输入1来确认入库\n")
 
     if is_checked == "1":
-        to_sql("fund_nv_data_source", engine_base, dataframe, type="update")
-        # to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
+        # to_sql("fund_nv_data_source", engine_base, dataframe, type="update")
+        to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
     else:
         pass
 

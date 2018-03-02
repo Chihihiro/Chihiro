@@ -1,5 +1,5 @@
 import numpy as np
-
+from engine import *
 import pylab as pl
 
 x1 = [1, 2, 3, 4, 5]  # Make x, y arrays for each graph

@@ -79,5 +79,5 @@ dataframe2 = df2
 
 
 to_sql("d_fund_nv", engine_crawl_private, dataframe, type="update")
-to_sql("fund_nv_data_source", engine_base, dataframe2, type="update")
+# to_sql("fund_nv_data_source", engine_base, dataframe2, type="update")
 

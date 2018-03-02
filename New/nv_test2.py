@@ -1,7 +1,7 @@
 from engine import *
+import time
 
-a=7*60*60
-time.sleep(a)
+
 engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'base.test', ),
                         connect_args={"charset": "utf8"}, echo=False, )
 # to_sql("market_info", engine_base, dataframe, type="update")
@@ -183,14 +183,17 @@ def to_list(df):
 
 
 def check():
-    df=pd.read_sql("SELECT fund_id,statistic_date,nav FROM fund_nv_data_standard where is_abnormal in (1,2,3,4,5)  and remark is NULL ",engine5)
+    df=pd.read_sql("SELECT fund_id,statistic_date,nav FROM fund_nv_data_standard where is_abnormal in (1,2,3,4,5,8,9)  and remark is NULL ",engine5)
+    # df = pd.read_sql(
+    #     "SELECT fund_id,statistic_date,nav FROM fund_nv_data_standard where is_abnormal in (8,9)  and remark is NULL ",
+    #     engine5)
     df["statistic_date"]=df["statistic_date"].apply(lambda x: x.strftime('%Y-%m-%d'))
     df["nav"] = df["nav"].apply(lambda x: '%.4f' % x)
     x=to_list(df)
     for i in x:
         JR=i[0]
         time=i[1]
-        nav=i[2]
+        nav=i[3]
         try:
             df=pd.read_sql("SELECT fund_id,data_source,data_source_name,nav,added_nav\
                             from fund_nv_data_source where fund_id='{}' and statistic_date='{}'".format(JR,time),engine_base)
@@ -214,6 +217,7 @@ def check():
                 pass
         except BaseException:
             print("错误")
+            pass
         else:
             pass
 
@@ -240,11 +244,11 @@ def len_JR():
 
 
 
-all=len_JR()
-pool = ThreadPool(20)
-pool.map(crawl,all)
-pool.close()
-pool.join()
+# all=len_JR()
+# pool = ThreadPool(20)
+# pool.map(crawl,all)
+# pool.close()
+# pool.join()
 
 
 check()

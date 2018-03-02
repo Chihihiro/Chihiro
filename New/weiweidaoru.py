@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
-from History.iosjk import to_sql
+from iosjk import to_sql
 from sqlalchemy import create_engine
 
 df = pd.read_excel('C:\\Users\\63220\\Desktop\\分类\\测试.csv')
