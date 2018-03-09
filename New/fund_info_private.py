@@ -8,7 +8,7 @@ def df_fundaccount():
     and entry_time>'2017-11-19' and version>1 \
     ORDER BY version DESC ) AS T \
     GROUP  BY T.fund_id;",engine_crawl_private)
-    df_fundaccount.rename(columns={"fund_id": "fundaccount_id", "fund_name_amac": "fundaccount_name"}, inplace=True)
+    df_fundaccount.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_fundaccount
 
 def df_private():
@@ -19,29 +19,29 @@ def df_private():
     and entry_time>'2017-11-20' and version>1 \
     ORDER BY version DESC ) AS T \
     GROUP  BY T.fund_id",engine_crawl_private)
-    df_private.rename(columns={"fund_id":"private_id","fund_name_amac":"private_name"},inplace=True)
+    df_private.rename(columns={"fund_id":"source_id","fund_name_amac":"test_name"},inplace=True)
     # df_private["private_id"]=df_private["private_id"].apply(lambda x: 'ID:'+str(x))
     return df_private
 
 
 def df_securities():
     df_securities = pd.read_sql("SELECT * FROM (SELECT   fund_id \
-    , fund_name_amac FROM x_fund_info_securities WHERE fund_id not in \
+    , fund_name_amac,reg_code_amac FROM x_fund_info_securities WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010004' and is_used=1)  \
     and entry_time>'2017-11-19'and version>1 \
     ORDER BY version DESC ) AS T-- securities \
     GROUP  BY T.fund_id;",engine_crawl_private)
-    df_securities.rename(columns={"fund_id": "securities_id", "fund_name_amac": "securities_name"}, inplace=True)
+    df_securities.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_securities
 
 def df_futures():
-    df_futures= pd.read_sql("SELECT * FROM (SELECT  fund_id, fund_name_amac \
+    df_futures= pd.read_sql("SELECT * FROM (SELECT  fund_id, fund_name_amac,reg_code_amac \
      FROM x_fund_info_futures WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010005' and is_used=1) \
     and entry_time>'2017-11-19'and version>1 \
     ORDER BY version DESC ) AS T -- futures \
     GROUP  BY T.fund_id",engine_crawl_private)
-    df_futures.rename(columns={"fund_id": "futures_id", "fund_name_amac": "futures_name"}, inplace=True)
+    df_futures.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_futures
 
 
@@ -52,7 +52,7 @@ def df_haomai():
     and source_id = '020001' \
     ORDER BY version DESC ) AS T \
     GROUP  BY T.fund_id",engine_crawl_private)
-    df_haomai.rename(columns={"fund_id": "haomai_id", "fund_full_name": "haomai_name"}, inplace=True)
+    df_haomai.rename(columns={"fund_id": "haomai_id", "fund_full_name": "test_name"}, inplace=True)
     return df_haomai
 
 def df_info():
@@ -96,37 +96,164 @@ def fund_full_name(fund_id):
     list=to_list(L)
     return list
 
+
+def generate_id(start_from, length):
+    ids = [(start_from + i) for i in range(0, length)]
+    return ["JR" + (6 - len(str(x))) * "0" + str(x) for x in ids]
+
+
+
+
 table_reg_code=pd.read_sql("select reg_code,fund_id from fund_info where reg_code is not NULL",engine_base)
 table_reg_code["reg_code"]=table_reg_code["reg_code"].apply(lambda x: x.strip())
 dict ={key:value for key,value in zip(table_reg_code["reg_code"],table_reg_code["fund_id"])}
 yes='yes'
 no='no'
-
-
 table1=pd.read_sql("select fund_full_name,fund_id from fund_info",engine_base)
 dict1 ={key:value for key,value in zip(table1["fund_full_name"],table1["fund_id"])}
 
+def test2(private_null):
+    if private_null.empty:
+        print("米有匹配到")
+        c = []
+        d = []
+        return c, d
+    else:
+        print("have")
+        private_null["fund_id"] = private_null["test_name"].apply(lambda x: dict1.get(x))
+        no = private_null.fillna("空")
+        c = no[no['fund_id'] != '空']
+        d = no[no['fund_id'] == '空']
+        return c,d
+
+def test1(private):
+    if private.empty:
+        print("米有匹配到")
+        a = []
+        b = []
+        return a, b
+
+    else:
+        print("have")
+        private["same"] = list(
+        map(lambda x, y: yes if y in fund_full_name(x) else no, private["fund_id"], private["test_name"]))
+        a = private[private["same"] == 'yes']
+        b = private[private["same"] == 'no']
+        return a, b
+
+def re_len(a,b):
+    if len(a)==0 and len(b)>0:
+        result=b
+        return result
+    elif len(b)==0 and len(a)>0:
+        result = a
+        return result
+    elif len(a)==0 and len(b)==0:
+        result=[]
+        return result
+    else:
+        result=a.append(b)
+        return result
+
+def id_match(fund_info,source):
+    fund_info["fund_id"]=fund_info["reg_code_amac"].apply(lambda x: dict.get(x) )
+    private=fund_info.loc[fund_info["fund_id"].notnull()]
+    private_null=fund_info.loc[fund_info["fund_id"].isnull()]
+    t1=test1(private)
+    t2=test2(private_null)
+    a=t1[0]
+    b=t1[1]
+    c=t2[0]
+    d=t2[1]
+
+    # result = pd.merge(a, c, how='outer')
+    # result2 = pd.merge(b, d, how='outer')
+
+    result =re_len(a,c)
+    result2 = re_len(b,d)
+
+    if len(result) == 0:
+        new_fund_id = result2["source_id"]
+        new_fund=pd.DataFrame(new_fund_id)
+        new_fund["source"]=source
+        new_fund["id_type"]=1
+        new_fund["is_used"]=1
+        new_fund["is_del"]=0
+        jr=pd.read_sql("select max(matched_id) from id_match where  id_type=1",engine_base)
+        maxjr=jr.iloc[0,0]
+        m=int(maxjr.replace("JR",""))
+        new_fund["matched_id"]= generate_id(m+1, len(new_fund))
+        return new_fund
+
+    elif len(result2) == 0:
+        new1=result.loc[:,['fund_id','source_id']]
+        new1["source"]=source
+        new1["id_type"]=1
+        new1["is_used"]=1
+        new1["is_del"]=0
+        new1.rename(columns={"fund_id": "matched_id"}, inplace=True)
+        return new1
+    else:
+        new1=result.loc[:,['fund_id','source_id']]
+        new1["source"]=source
+        new1["id_type"]=1
+        new1["is_used"]=1
+        new1["is_del"]=0
+        new_fund_id = result2["source_id"]
+        new_fund=pd.DataFrame(new_fund_id)
+        new_fund["source"]=source
+        new_fund["id_type"]=1
+        new_fund["is_used"]=1
+        new_fund["is_del"]=0
+        jr=pd.read_sql("select max(matched_id) from id_match where  id_type=1",engine_base)
+        maxjr=jr.iloc[0,0]
+        m=int(maxjr.replace("JR",""))
+        new_fund["fund_id"]= generate_id(m+1, len(new_fund))
+        re = new1.append(new_fund)
+        re.rename(columns={"fund_id":"matched_id"},inplace=True)
+        return re
 
 
-# fund_account=df_fundaccount()
-# fund_account["fund_id"]=fund_account["reg_code_amac"].apply(lambda x: dict.get(x))
 
-#
+source_fundaccount='010002'
+source_private='010003'
+source_securities='010004'
+source_futures='010005'
+
+
+fund_fundaccount=df_fundaccount()
+over1=id_match(fund_fundaccount,source_fundaccount)
+
+to_sql("id_match", engine_base, over1, type="ignore") #ignore
+
+
+fund_securities=df_securities()
+over3=id_match(fund_securities,source_securities)
+to_sql("id_match", engine_base, over3, type="ignore") #ignore
+
+fund_futures=df_futures()
+over4=id_match(fund_futures,source_futures)
+to_sql("id_match", engine_base, over4, type="ignore") #ignore
+
+
+
 fund_private=df_private()
-
-fund_private["fund_id"]=fund_private["reg_code_amac"].apply(lambda x: dict.get(x) )
-private=fund_private.loc[fund_private["fund_id"].notnull()]
-private["same"]= list(map(lambda x,y:  yes if y in fund_full_name(x) else no, private["fund_id"], private["private_name"]))
+over2=id_match(fund_private,source_private)
+to_sql("id_match", engine_base, over2, type="ignore") #ignore
 
 
 
-private_no=fund_private.loc[fund_private["fund_id"].isnull()]
-private_no["fund_id"]=private_no["private_name"].apply(lambda x: dict1.get(x) )
-no=fund_private.loc[fund_private["fund_id"].notnull()]
-private_no["same"]= list(map(lambda x,y:  yes if y in fund_full_name(x) else no, private["fund_id"], private_no["private_name"]))
 
 
-a=private[private["same"]=='yes'].iloc[3]
+
+
+
+
+
+
+
+
+
 
 
 

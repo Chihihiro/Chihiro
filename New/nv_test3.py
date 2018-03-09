@@ -2,9 +2,9 @@ from engine import *
 import time
 
 
-engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'base.test', ),
-                        connect_args={"charset": "utf8"}, echo=False, )
-# to_sql("market_info", engine_base, dataframe, type="update")
+# engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'base.test', ),
+#                         connect_args={"charset": "utf8"}, echo=False, )
+
 def is_B0(JR,statistic_date):
     return engine_data_test.execute("update fund_nv_data_standard_test set is_abnormal=0 where fund_id='{}' and statistic_date\
                                                     ='{}' ".format(JR, statistic_date))
@@ -163,8 +163,10 @@ def to_list(df):
 
 
 def check():
-    df=pd.read_sql("SELECT t.fund_id,t.statistic_date,t.is_abnormal,b.nav FROM fund_nv_data_standard_test as t LEFT JOIN base.fund_nv_data_standard as b ON t.fund_id=b.fund_id and t.statistic_date=b.statistic_date AND t.is_abnormal in (1,2,3,4,5) ",engine_data_test)
+    df=pd.read_sql("SELECT t.fund_id,t.statistic_date,t.is_abnormal,b.nav FROM fund_nv_data_standard_test as t LEFT JOIN base.fund_nv_data_standard as b ON t.fund_id=b.fund_id and \
+     t.statistic_date=b.statistic_date AND t.is_abnormal in (1,2,3,4,5) WHERE b.nav is not NULL",engine_data_test)
     # df=pd.read_sql("select fund_id,statistic_date,is_abnormal,")
+
     # df["statistic_date"]=df["statistic_date"].apply(lambda x: x.strftime('%Y-%m-%d'))
     df["nav"] = df["nav"].apply(lambda x: '%.4f' % x)
     x=to_list(df)
