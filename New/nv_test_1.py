@@ -1,4 +1,4 @@
-from History.engine import *
+from engine import *
 from multiprocessing.dummy import Pool as ThreadPool
 
 
@@ -12,11 +12,11 @@ def dateRange(beginDate, endDate):
         date = dt.strftime("%Y-%m-%d")
     return dates
 
-a=datetime.timezone(1)
+# a = datetime.timezone(1)
 co=0
 
-a=dateRange('2017-08-02',now(-7-co))
-b=dateRange('2017-08-08',now(-co))
+a=dateRange('2017-08-02',now_time(-7-co))
+b=dateRange('2017-08-08',now_time(-co))
 all=[]
 for num in range(len(a)):
     i=a[num]
@@ -24,8 +24,8 @@ for num in range(len(a)):
     vv=[i,o]
     all.append(vv)
 
-a1=dateRange('2016-08-02',now(-372-co))
-b1=dateRange('2016-08-08',now(-365-co))
+a1=dateRange('2016-08-02',now_time(-7-co))
+b1=dateRange('2016-08-08',now_time(co))
 all1=[]
 for num in range(len(a1)):
     i=a1[num]
@@ -34,8 +34,8 @@ for num in range(len(a1)):
     all1.append(vv)
 
 
-a2=dateRange('2015-08-02',now(-737-co))
-b2=dateRange('2015-08-08',now(-730-co))
+a2=dateRange('2015-08-02',now_time(-7-co))
+b2=dateRange('2015-08-08',now_time(--co))
 all2=[]
 for num in range(len(a2)):
     i=a2[num]

@@ -1,5 +1,5 @@
-from Chihiro.New.iosjk import *
-from History.engine import *
+from New.iosjk import *
+from engine import *
 df=pd.read_sql("select zhaoyang,standard,nv_source,nv_source_copy2,nv_standard_copy2 from zhaoyang WHERE zhaoyang is not NULL AND version='{}'".format(now),engine5)
 df.dropna(axis=0, how='any', thresh=None, subset=None, inplace=True)
 df["differ_day_standard"] = (df["standard"] - df["zhaoyang"]).apply(lambda x: x.days)
@@ -86,7 +86,7 @@ table.insert_image('Q5','C:\\Users\\63220\\PycharmProjects\\QQX\\ceshi.png' )
 
 
 import numpy as np
-from History import matplotlib as plt
+import matplotlib as plt
 
 size = 5
 x = np.arange(size)
@@ -104,12 +104,12 @@ plt.bar(x + 2 * width, c, width=width, label='c')
 plt.legend()
 plt.show()
 
-import History.matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # a = np.array([5, 20, 15, 25, 10])
 # b = np.array([10, 15, 20, 15, 5])
 
-from History.engine import *
+from engine import *
 df=pd.read_sql("select zhaoyang,standard,nv_source,nv_source_copy2,nv_standard_copy2 from zhaoyang WHERE zhaoyang is not NULL AND version='{}'".format(now),engine5)
 df.dropna(axis=0, how='any', thresh=None, subset=None, inplace=True)
 df["differ_day_standard"] = (df["standard"] - df["zhaoyang"]).apply(lambda x: x.days)

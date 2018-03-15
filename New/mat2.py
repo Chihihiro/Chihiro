@@ -1,13 +1,14 @@
 import random
-from History import matplotlib as mpl, matplotlib as plt
-from History.nv_test_1 import *
-
+import matplotlib as mpl
+from New.nv_test_1 import *
+import matplotlib.pyplot as plt
 mpl.rcParams['font.size'] = 5.5
+from mpl_toolkits.mplot3d import Axes3D
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-
+ax = fig.add_subplot(111, projection='3d')
 #-------------------------------------------
 p=[]
 week=[]
@@ -48,13 +49,6 @@ for i in list_2015:
 
 
 
-
-
-
-
-
-
-
 #---------------------------------------------------------------------------------
 z=1
 xs = wc
@@ -82,18 +76,6 @@ color =plt.cm.Set2(random.choice(range(plt.cm.Set2.N)))
 ax.bar(xs, p_2015, zs=z2, zdir='y', color=color, alpha=0.7)
 ax.yaxis.set_major_locator(mpl.ticker.FixedLocator(xs))
 ax.yaxis.set_major_locator(mpl.ticker.FixedLocator(p_2015))
-
-
-
-
-# z1=2
-# xs1 = range(1,13)
-# ys1 = 1000 * np.random.rand(12)
-# color =plt.cm.Set2(random.choice(range(plt.cm.Set2.N)))
-# ax.bar(xs1, ys1, zs=z1, zdir='y', color=color, alpha=0.8)
-#  # ax.bar(xs, ys, zdir='y', color=color, alpha=0.8)
-# ax.xaxis.set_major_locator(mpl.ticker.FixedLocator(xs1))
-# ax.yaxis.set_major_locator(mpl.ticker.FixedLocator(ys1))
 
 
 ax.set_xlabel('Day')

@@ -2,10 +2,6 @@ import pandas as pd
 from iosjk import to_sql
 from sqlalchemy import create_engine
 
-engine = create_engine("mysql+pymysql://{}:{}@{}:{}/".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171),connect_args={"charset": "utf8"}, echo=True, )
-engine2 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
-engine4 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl_private', ),connect_args={"charset": "utf8"}, echo=True, )
 
 
 df=pd.read_excel('C:\\Users\\63220\\Desktop\\fund_id1225.xls')

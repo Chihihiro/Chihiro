@@ -1,5 +1,5 @@
-from History import matplotlib as plt
-from History.nv_test_1 import *
+import matplotlib as plt
+from New.nv_test_1 import *
 
 
 fig=plt.figure(1)

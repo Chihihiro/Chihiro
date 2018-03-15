@@ -2,7 +2,7 @@
 import pandas as pd
 from iosjk import to_sql
 from sqlalchemy import create_engine
-
+from engine import *
 df = pd.read_excel('C:\\Users\\63220\\Desktop\\分类\\测试.csv')
 df['stype_code']=df['stype_code'].apply(lambda x: '%.0f' % x)
 df['confirmed']=df['confirmed'].apply(lambda x: '%.0f' % x)
@@ -145,14 +145,11 @@ print(df2)
 
 is_checked = input("输入1来确认入库,输入2确认605策略\n")
 if is_checked == "1":
-    # engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd','jr_admin_qxd','182.254.128.241',4171,'config_private', ), connect_args={"charset": "utf8"},echo=True,)
-    engine = create_engine( "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171,'base', ), connect_args={"charset": "utf8"}, echo=True, )
-    # engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-    to_sql("fund_type_mapping_import", engine, df2, type="update")
+
+    to_sql("fund_type_mapping_import", engine_base, df2, type="update")
 elif is_checked == "2":
-    # engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root', '', 'localhost', 3306, 'test', ),connect_args={"charset": "utf8"}, echo=True, )
-    engine = create_engine( "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base', ),connect_args={"charset": "utf8"}, echo=True, )
-    to_sql("fund_type_mapping_import", engine, df1, type="update")
+
+    to_sql("fund_type_mapping_import", engine_base, df1, type="update")
 else:
     pass
 

@@ -39,9 +39,6 @@ for i in BB:
 
 
 
-
-engine_base = create_engine( "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171,'base', ), connect_args={"charset": "utf8"}, echo=True, )
-# BB=[['JR000033', '兴证证券资产管理有限公司'], ['JR000042', '北方A啊斌']]
 # table2=pd.read_sql("select org_id,org_full_name from org_info where org_full_name is not NULL ",engine_base)
 # table2["org_full_name"]=table2["org_full_name"].apply(lambda x: x.lstrip())
 # dict2 ={key:value for key,value in zip(table2["org_id"],table2["org_full_name"])}

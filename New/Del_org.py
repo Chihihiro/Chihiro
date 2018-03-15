@@ -9,8 +9,6 @@ def to_list(df):
     return vv
 
 
-engine_base = create_engine( "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171,'base', ), connect_args={"charset": "utf8"}, echo=True, )
-engine_lijia = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base_public', ), connect_args={"charset": "utf8"}, echo=True, )
 
 def table_name():
     cc = pd.read_sql("show tables", engine_lijia)

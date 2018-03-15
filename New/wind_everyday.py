@@ -8,7 +8,7 @@ from engine import *
 wind.start()    # 启动wind
 now = time.strftime("%Y-%m-%d")
 
-wind_ids=pd.read_sql('select DISTINCT fund_id from d_fund_nv WHERE source_id=020007 ',engine_crawl_private)
+wind_ids=pd.read_sql("select DISTINCT fund_id from d_fund_nv WHERE source_id=020007 and fund_id not like 'JR%%'",engine_crawl_private)
 dds=wind_ids["fund_id"].tolist()
 print(dds)
 
@@ -48,7 +48,7 @@ def crawl_benchmark(id):    # 定义方法
 
     # wdid=('XT045313.XT','XT1703499.XT',	'XT1703378.XT',	'XT1703377.XT',)
 DF=[]
-DF_SOURCE=[]
+# DF_SOURCE=[]
 for i in dds:
     q=crawl_benchmark(i)
     print(q)
@@ -58,23 +58,23 @@ for i in dds:
         QQ = ('020007','0')
         qq=q+QQ
         DF.append(qq)
-        cc=pd.read_sql("select fund_ID from fund_id_match WHERE source_ID='{}'".format(i),engine_base).iloc[0,0]
-        sqq = ('3','第三方','13','wind',cc)
-        source = q+sqq
-        DF_SOURCE.append(source)
+        # cc=pd.read_sql("select fund_ID from fund_id_match WHERE source_ID='{}'".format(i),engine_base).iloc[0,0]
+        # sqq = ('3','第三方','13','wind',cc)
+        # source = q+sqq
+        # DF_SOURCE.append(source)
 
 
 df = pd.DataFrame(DF)
-df2 = pd.DataFrame(DF_SOURCE)
+# df2 = pd.DataFrame(DF_SOURCE)
 df.columns = ["fund_id","statistic_date", "nav", "added_nav","adjusted_nav","fund_name","source_id","is_del"]
-df2.columns = ["wind_id", "statistic_date", "nav", "added_nav", "swanav", "fund_name", "source_code", "source","data_source","data_source_name","fund_id"]
-del df2["wind_id"]
-del df2["swanav"]
+# df2.columns = ["wind_id", "statistic_date", "nav", "added_nav", "swanav", "fund_name", "source_code", "source","data_source","data_source_name","fund_id"]
+# del df2["wind_id"]
+# del df2["swanav"]
 df['adjusted_nav'] = df['adjusted_nav'].apply(lambda x: '%.4f' % x)
 print(df)
-print(df2)
+# print(df2)
 dataframe=df
-dataframe2 = df2
+# dataframe2 = df2
 
 
 
