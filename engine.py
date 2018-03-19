@@ -21,7 +21,9 @@ def to_table(df):
     df.to_csv("C:\\Users\\63220\\Desktop\\Pycharm测试{}.csv".format(now2))
 
 def to_table_excel(df):
-    df.to_csv("C:\\Users\\63220\\Desktop\\Pycharm测试{}.xlsx".format(now2))
+    writer = pd.ExcelWriter("C:\\Users\\63220\\Desktop\\Pycharm{}.xlsx".format(now))
+    df.to_excel(writer, "Sheet1")
+    writer.save()
 
 
 def to_zd(df):

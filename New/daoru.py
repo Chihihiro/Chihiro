@@ -45,9 +45,9 @@ from engine import *
 # df=pd.read('C:\\Users\\63220\\Desktop\\id001.txt')
 #
 #
-df = pd.read_excel('C:\\Users\\63220\Desktop\\org_info补充.xlsx')
+df = pd.read_excel('C:\\Users\\63220\Desktop\\id_matched基金-好买0316.xlsx')
 # df["jfz_timeid"]=df["jfz_timeid"].apply(lambda x:'%.0f' % x if x is not None else None)
-# df["source"]=df["source"].apply(lambda x: '0'+str(x))
+df["source"]=df["source"].apply(lambda x: '0'+str(x))
 # df["source_id"]=df["source_id"].apply(lambda x: int(x))
 
 # df["matched_id"]=df["matched_id"].apply(lambda x: '0'+str(x))
@@ -58,7 +58,7 @@ df = pd.read_excel('C:\\Users\\63220\Desktop\\org_info补充.xlsx')
 # df["fund_id"]=df["fund_id"].apply(lambda x: "%06d" % x)
 # df.rename(columns={"is_used":"is_updata"},inplace=True)
 # df["matched_id"]=df["matched_id"].apply(lambda x: '0'+str(x))
-df["version"]=2018031411
+# df["version"]=2018031611
 # df["target_table"]="fund_nv_data_standard"
 # print(df)
 # exit()
@@ -83,7 +83,7 @@ dataframe = df
 is_checked = input("输入1,2来确认入库\n")
 if is_checked == "1":
     engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-    to_sql("y_org_info", engine_crawl_private, dataframe, type="update")   #ignore
+    to_sql("id_match", engine_base, dataframe, type="update")   #ignore
 else:
     pass
 #
