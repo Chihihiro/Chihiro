@@ -127,7 +127,7 @@ if __name__ == "__main__":
     worksheet = workbook.add_sheet('My Sheet')
     all_list=[]
     pool = ThreadPool(6)
-    data_p = pool.map_async(muti_task, range(10000,20000))
+    data_p = pool.map_async(muti_task, range(0,100))
     all_list=data_p.get()
 
     for i in range(len(all_list)):

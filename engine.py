@@ -21,7 +21,7 @@ def to_table(df):
     df.to_csv("C:\\Users\\63220\\Desktop\\Pycharm测试{}.csv".format(now2))
 
 def to_table_excel(df):
-    writer = pd.ExcelWriter("C:\\Users\\63220\\Desktop\\Pycharm{}.xlsx".format(now))
+    writer = pd.ExcelWriter("C:\\Users\\63220\\Desktop\\Pycharm{}.xlsx".format(now2))
     df.to_excel(writer, "Sheet1")
     writer.save()
 
@@ -60,3 +60,9 @@ def dateRange(beginDate, endDate):
         dt = dt + datetime.timedelta(1)
         date = dt.strftime("%Y-%m-%d")
     return dates
+
+def info_to_table():
+    df=pd.read_sql("Select fund_id,reg_code,fund_name,fund_full_name,foundation_date,fund_manager,fund_manager_nominal,fund_id from base.fund_info ORDER BY fund_id DESC ;",engine_base)
+    to_table_excel(df)
+    print(now2)
+    print('已经保存桌面')

@@ -709,10 +709,9 @@ def simi_vec(str1, str2, model):
     sim = 1.0 / (1.0 + dist)
     return sim
 
-
+from engine import *
 if __name__ == "__main__":
     fund_name2,nrow=init_2_f()
-    from engine import *
     df=pd.read_sql("SELECT * FROM (SELECT fund_id, \
     fund_full_name \
     FROM d_fund_info WHERE fund_id NOT IN (SELECT source_id FROM base.id_match where source='020001') \
@@ -726,7 +725,7 @@ if __name__ == "__main__":
     tyc_word = []
     try:
         res_data = match_name(df, fund_name2, range(0, 2910), range(nrow), 'fund_full_name',
-                              'fund_full_name','fund_id', how=5)
+                              'fund_full_name','fund_id', how=3)
     except "Primary_error":
         print("The primary key doesn't exist in both of the dataframe.")
     except "How error":
