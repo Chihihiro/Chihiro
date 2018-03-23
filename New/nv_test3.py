@@ -202,7 +202,7 @@ def check():
         else:
             pass
 
-from multiprocessing.dummy import Pool as ThreadPool
+
 
 def len_JR():
     JR_all = pd.read_sql("select DISTINCT fund_id FROM fund_nv_data_standard", engine_base)
@@ -226,11 +226,13 @@ def len_JR():
 
 
 
-# all=len_JR()
-# pool = ThreadPool(20)
-# pool.map(crawl,all)
-# pool.close()
-# pool.join()
+all=len_JR()
+
+from multiprocessing.dummy import Pool as ThreadPool
+pool = ThreadPool(20)
+pool.map(crawl,all)
+pool.close()
+pool.join()
 
 
 check()

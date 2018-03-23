@@ -66,3 +66,47 @@ def info_to_table():
     to_table_excel(df)
     print(now2)
     print('已经保存桌面')
+
+dict_table = {"010002": "x_fund_info_fundaccount",
+              "010003": "x_fund_info_private",
+              "010004": "x_fund_info_securities",
+              "010005": "x_fund_info_futures",
+              "020001": "d_fund_info",
+              "020002": "d_fund_info",
+              "020003": "d_fund_info",
+              }
+
+
+def fund_full_name(fund_id):
+    df = pd.read_sql("select source_id,source from id_match WHERE matched_id='{}' \
+    and is_used=1 AND source not in ('010001','000001','020004','020005','020007') and source not like '03%%' and source not like'04%%' and source not like'05%%'".format(
+        fund_id), engine_base)
+    num = len(df)
+
+    df['fund_tabel'] = df['source'].apply(lambda x: dict_table.get(x))
+    df["fund_full_name"] = None
+    for i in range(num):
+        a = df.iloc[i, 0]
+        b = df.iloc[i, 1]
+        c = df.iloc[i, 2]
+        if b in ('020001', '020002', '020003'):
+            name = pd.read_sql(
+                "SELECT DISTINCT fund_full_name FROM d_fund_info WHERE fund_id='{}' and source_id='{}' and  version>10".format(a, b),
+                engine_crawl_private)
+            try:
+                full_name = name.iloc[0, 0]
+                df.iloc[i, 3] = full_name
+            except BaseException:
+                full_name = '空'
+                df.iloc[i, 3] = full_name
+            else:
+                pass
+        else:
+            name = pd.read_sql("SELECT DISTINCT fund_name_amac FROM {} where fund_id='{}'".format(c, a),
+                               engine_crawl_private)
+            full_name = name.iloc[0, 0]
+            df.iloc[i, 3] = full_name
+    print(df)
+    L = df["fund_full_name"]
+    list = to_list(L)
+    return list

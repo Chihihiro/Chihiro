@@ -44,7 +44,7 @@ def bian():
 
 def timeshow():
     all=[]
-    a=dateRange("2018-03-10","2018-03-16")
+    a=dateRange("2018-02-01","2018-02-01")
     for i in a:
         q=re.sub(r'2018-', '18', i)
         w=re.sub(r'-', '', q)
@@ -60,7 +60,7 @@ san2=timeshow()                           #~~~~~~~~~~~~~~~~可在上面固定日
 
 
 
-xx=list(range(3000))
+xx=list(range(0,30000))
 xx.pop(0)
 reall = []
 for date in san2:
@@ -80,7 +80,7 @@ import random
 engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
 engine3 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd','jr_admin_qxd','182.254.128.241',4171,'crawl_private', ), connect_args={"charset": "utf8"},echo=True,)
 for ids in reall:
-    break_count=1000      #最大失败数量为10
+    break_count=30000      #最大失败数量为10
     while break_count>0:
         id=ids.pop(0)
         jid=jiami_all(id)
@@ -99,11 +99,11 @@ for ids in reall:
             RR=[jid,J_return,id,a,b]
             df=pd.DataFrame(RR)
             dataframe=df.T
-            print(dataframe)
-            # dataframe=df
 
             dataframe.columns =["fund_id","fund_name","id_time","priority","is_used"]
-            dataframe["source"]='020002'
+            dataframe["source_id"]='020002'
+            print(dataframe)
+            print(now2)
             # to_sql("jfz_id", engine, dataframe, type="update")
             to_sql("__id_search", engine3, dataframe, type="update")
             # print(jid)

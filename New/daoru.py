@@ -91,3 +91,8 @@ else:
 #     to_sql("sync_source", engine_config_private, df2, type="update")  # ignore
 # else:
 #     pass
+
+df = pd.read_excel('C:\\Users\\63220\Desktop\\删org）mapping.xls')
+def Del_org_mapping(JR,org_id,type):
+    return engine_base.execute("DELETE from fund_org_mapping WHERE fund_id='{}' AND org_id='{}' AND org_type_code='{}'".format(JR, org_id,type))
+

@@ -1,132 +1,4 @@
 from engine import *
-# def col_chi(userstr):
-#     """
-#     筛选字符中的中文字符，英文字符与阿拉伯数字 需要import re
-#     Args:
-#     userstr - str
-#
-#     Returns:
-#     new_str - str
-#     """
-#     pattern = re.compile(r'[\u4e00-\u9fa5]|\d|[A-Z]|[a-z]|"信托"')
-#     new_str = []
-#     for i in range(len(userstr)):
-#         if pattern.match(userstr[i]):
-#             new_str.append(userstr[i])
-#         else:
-#             new_str.append('')
-#     new_str = "".join(new_str)
-#     return new_str
-#
-#
-# def del_space(list_in):
-#     """
-#     将list中的空格元素删去
-#     Args:
-#     list_in - list
-#
-#     Returns:
-#     list_out - list
-#     """
-#     if len(list_in) == 0:
-#         return list_in
-#     len_list = len(list_in)
-#     for i in range(len_list - 1, -1, -1):
-#         if list_in[i] == " ":
-#             del list_in[i]
-#     list_out = []
-#     list_out[:] = list_in
-#     return list_out
-#
-#
-# def chinese2digits(uchars_chinese):
-#     """
-#     将输入的中文数字转化为阿拉伯数字
-#     Args:
-#     userstr - str
-#
-#     Returns:
-#     total - int
-#     """
-#     total = 0
-#     r = 1  # 表示单位：个十百千...
-#     is_find = 0  # 判断是否为标准输入
-#     common_used_numerals = {'零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9,
-#                             '十': 10, '百': 100, }  # 筛选数字字典
-#     for i in range(len(uchars_chinese) - 1, -1, -1):
-#         if common_used_numerals.get(uchars_chinese[i]) == '10':
-#             is_find = 1
-#             break
-#     if len(uchars_chinese) >= 2 and is_find == 0:  # 不是标准输入
-#         j = 1  # 十进制位数
-#         for i in range(len(uchars_chinese) - 1, -1, -1):
-#             val = common_used_numerals.get(uchars_chinese[i])
-#             total = total + j * val
-#             j = 10 * j
-#         return total
-#
-#     for i in range(len(uchars_chinese) - 1, -1, -1):
-#         val = common_used_numerals.get(uchars_chinese[i])
-#         if val >= 10 and i == 0:  # 应对 十三 十四 十*之类
-#             if val > r:
-#                 r = val
-#                 total = total + val
-#             else:
-#                 r = r * val
-#                 # total =total + r * x
-#         elif val >= 10:
-#             if val > r:
-#                 r = val
-#             else:
-#                 r = r * val
-#         else:
-#             total = total + r * val
-#     return total
-#
-#
-# def sub_chi2num(userstr):
-#     """
-#     将输入的基金名称找出数字部分使用chines2digits函数将其替换并返回新的基金名称
-#     Args:
-#     userstr - str
-#
-#     Returns:
-#     res_str - str
-#     """
-#     common_used_numerals = {'零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9,
-#                             '十': 10, '百': 100, }  # 筛选数字字典
-#     if len(userstr) == 0:
-#         return userstr
-#     is_find = 0  # 判断是否找到数字
-#     first = []  # 包含数字的字符首位
-#     last = []  # 包含数字的字符末尾
-#     str_list = list(userstr)
-#     get_num = []  # 包含转换后的数字列表
-#     nstr = len(userstr)
-#     for i in range(nstr):
-#         if is_find == 0:
-#             if common_used_numerals.get(userstr[i]):
-#                 is_find = 1
-#                 first.append(i)
-#         else:
-#             if not common_used_numerals.get(userstr[i]):
-#                 is_find = 0
-#                 last.append(i - 1)
-#         if i == len(userstr) - 1 and is_find == 1:  # 循环即将结束后还未找到非数字，则必然是该中文数字的最后一位
-#             last.append(i)
-#     nfirst = len(first)
-#     for i in range(nfirst):
-#         if last[i] <= nstr:
-#             get_num.append(chinese2digits(userstr[first[i]:last[i] + 1]))
-#         else:
-#             get_num.append(chinese2digits(userstr[first[i]:]))
-#     for i in range(nfirst - 1, -1, -1):
-#         for j in range(last[i], first[i] - 1, -1):
-#             del str_list[j]
-#         str_list.insert(first[i], str(get_num[i]))
-#     res_str = "".join(str_list)
-#     return res_str
-
 
 def df_fundaccount():
     df_fundaccount = pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name_amac,reg_code_amac \
@@ -157,7 +29,7 @@ def df_securities():
     , fund_name_amac,reg_code_amac FROM x_fund_info_securities WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010004' and is_used=1)  \
     and entry_time>'2017-11-19'and version>1 \
-    ORDER BY version DESC ) AS T-- securities \
+    ORDER BY version DESC ) AS T  \
     GROUP  BY T.fund_id;", engine_crawl_private)
     df_securities.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_securities
@@ -168,22 +40,11 @@ def df_futures():
      FROM x_fund_info_futures WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010005' and is_used=1) \
     and entry_time>'2017-11-19'and version>1 \
-    ORDER BY version DESC ) AS T -- futures \
+    ORDER BY version DESC ) AS T  \
     GROUP  BY T.fund_id", engine_crawl_private)
     df_futures.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_futures
 
-
-def df_haomai():
-    engine_crawl_private.execute(
-        "UPDATE d_fund_info set is_used=0  WHERE fund_id in (select a.fund_id from (select DISTINCT fund_id FROM d_fund_info where is_used=0) as a)")
-    df_haomai = pd.read_sql("SELECT * FROM (SELECT fund_id,\
-    fund_full_name FROM d_fund_info WHERE fund_id NOT IN (SELECT source_id FROM base.id_match where source='020001')\
-    and source_id = '020001' \
-    ORDER BY version DESC ) AS T \
-    GROUP  BY T.fund_id", engine_crawl_private)
-    df_haomai.rename(columns={"fund_id": "haomai_id", "fund_full_name": "test_name"}, inplace=True)
-    return df_haomai
 
 
 
@@ -198,9 +59,6 @@ dict_table = {"010002": "x_fund_info_fundaccount",
               }
 
 
-
-
-
 def generate_id(start_from, length):
     ids = [(start_from + i) for i in range(0, length)]
     return ["JR" + (6 - len(str(x))) * "0" + str(x) for x in ids]
@@ -211,8 +69,43 @@ table_reg_code["reg_code"] = table_reg_code["reg_code"].apply(lambda x: x.strip(
 dict = {key: value for key, value in zip(table_reg_code["reg_code"], table_reg_code["fund_id"])}
 yes = 'yes'
 no = 'no'
+
 table1 = pd.read_sql("select fund_full_name,fund_id from fund_info", engine_base)
 dict1 = {key: value for key, value in zip(table1["fund_full_name"], table1["fund_id"])}
+
+def fund_full_name(fund_id):
+    df = pd.read_sql("select source_id,source from id_match WHERE matched_id='{}' \
+    and is_used=1 AND source not in ('010001','000001','020004','020005','020007') and source not like '03%%' and source not like'04%%' and source not like'05%%'".format(
+        fund_id), engine_base)
+    num = len(df)
+
+    df['fund_tabel'] = df['source'].apply(lambda x: dict_table.get(x))
+    df["fund_full_name"] = None
+    for i in range(num):
+        a = df.iloc[i, 0]
+        b = df.iloc[i, 1]
+        c = df.iloc[i, 2]
+        if b in ('020001', '020002', '020003'):
+            name = pd.read_sql(
+                "SELECT DISTINCT fund_full_name FROM d_fund_info WHERE fund_id='{}' and source_id='{}' and  version>10".format(a, b),
+                engine_crawl_private)
+            try:
+                full_name = name.iloc[0, 0]
+                df.iloc[i, 3] = full_name
+            except BaseException:
+                full_name = '空'
+                df.iloc[i, 3] = full_name
+            else:
+                pass
+        else:
+            name = pd.read_sql("SELECT DISTINCT fund_name_amac FROM {} where fund_id='{}'".format(c, a),
+                               engine_crawl_private)
+            full_name = name.iloc[0, 0]
+            df.iloc[i, 3] = full_name
+    print(df)
+    L = df["fund_full_name"]
+    list = to_list(L)
+    return list
 
 
 def test2(private_null):
@@ -223,10 +116,13 @@ def test2(private_null):
         return c, d
     else:
         print("have")
-        private_null["fund_id"] = private_null["test_name"].apply(lambda x: dict1.get(x))
+        # private_null["fund_id"] = private_null["test_name"].apply(lambda x: dict1.get(x))
         no = private_null.fillna("空")
+        del no["fund_id"]
+        no.rename(columns={"fund_id_get":"fund_id"},inplace=True)
         c = no[no['fund_id'] != '空']
         d = no[no['fund_id'] == '空']
+
         return c, d
 
 
@@ -262,13 +158,14 @@ def re_len(a, b):
 
 
 def id_match(fund_info, source):
+    # fund_info=df
     fund_info["fund_id"] = fund_info["reg_code_amac"].apply(lambda x: dict.get(x))
     private = fund_info.loc[fund_info["fund_id"].notnull()]
     private_null = fund_info.loc[fund_info["fund_id"].isnull()]
     t1 = test1(private)
     t2 = test2(private_null)
     a = t1[0]
-    b = t1[1]
+    # b = t1[1] #pass 掉
     c = t2[0]
     d = t2[1]
 
@@ -276,7 +173,7 @@ def id_match(fund_info, source):
     # result2 = pd.merge(b, d, how='outer')
 
     result = re_len(a, c)
-    result2 = re_len(b, d)
+    result2 = d
 
     if len(result) == 0:
         new_fund_id = result2["source_id"]
@@ -319,12 +216,14 @@ def id_match(fund_info, source):
         re.rename(columns={"fund_id": "matched_id"}, inplace=True)
         return re
 
-from name.match_port import *
+
 source_fundaccount = '010002'
 source_private = '010003'
 source_securities = '010004'
 source_futures = '010005'
 
+
+from name.match_port import *
 def get_name(df1):
     df_info = init_2_f()[0]
     df1.rename(columns={"source_id":"fund_id"},inplace=True)
@@ -339,23 +238,28 @@ def get_name(df1):
 
 
 fund_fundaccount = df_fundaccount()
-over1 = id_match(fund_fundaccount, source_fundaccount)
+df1=get_name(fund_fundaccount)
+over1 = id_match(df1, source_fundaccount)
+
 to_sql("id_match", engine_base, over1, type="update")  # ignore
 
 
 
 fund_private = df_private()
-over2 = id_match(fund_private, source_private)
+df2=get_name(fund_private)
+over2 = id_match(df2, source_private)
 to_sql("id_match", engine_base, over2, type="update")  # ignore
 
 
 
 fund_securities = df_securities()
-over3 = id_match(fund_securities, source_securities)
+df3=get_name(fund_securities)
+over3 = id_match(df3, source_securities)
 to_sql("id_match", engine_base, over3, type="update")  # ignore
 
 fund_futures = df_futures()
-over4 = id_match(fund_futures, source_futures)
+df4=get_name(fund_futures)
+over4 = id_match(df4, source_futures)
 to_sql("id_match", engine_base, over4, type="update")  # ignore
 
 
