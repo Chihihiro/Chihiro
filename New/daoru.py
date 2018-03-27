@@ -45,9 +45,9 @@ from engine import *
 # df=pd.read('C:\\Users\\63220\\Desktop\\id001.txt')
 #
 #
-df = pd.read_excel('C:\\Users\\63220\Desktop\\name.xls')
+df = pd.read_excel('C:\\Users\\63220\Desktop\\id_match.xls')
 # df["jfz_timeid"]=df["jfz_timeid"].apply(lambda x:'%.0f' % x if x is not None else None)
-# df["source"]=df["source"].apply(lambda x: '0'+str(x))
+df["source"]=df["source"].apply(lambda x: '0'+str(x))
 # df["source_id"]=df["source_id"].apply(lambda x: int(x))
 # df["source_id"]=df["source_id"].apply(lambda x: '0'+str(x))
 # df["matched_id"]=df["matched_id"].apply(lambda x: '0'+str(x))
@@ -58,7 +58,7 @@ df = pd.read_excel('C:\\Users\\63220\Desktop\\name.xls')
 # df["fund_id"]=df["fund_id"].apply(lambda x: "%06d" % x)
 # df.rename(columns={"is_used":"is_updata"},inplace=True)
 # df["matched_id"]=df["matched_id"].apply(lambda x: '0'+str(x))
-df["version"]=2018032211
+# df["version"]=2018032211
 # df["target_table"]="fund_nv_data_standard"
 # print(df)
 # exit()
@@ -83,7 +83,7 @@ dataframe = df
 is_checked = input("输入1,2来确认入库\n")
 if is_checked == "1":
     engine5 = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format('root','','localhost',3306,'test', ), connect_args={"charset": "utf8"},echo=True,)
-    to_sql("y_fund_info", engine_crawl_private, dataframe, type="update")   #ignore
+    to_sql("id_match", engine_base, dataframe, type="update")   #ignore
 else:
     pass
 #
@@ -92,7 +92,7 @@ else:
 # else:
 #     pass
 
-df = pd.read_excel('C:\\Users\\63220\Desktop\\删org）mapping.xls')
+# df = pd.read_excel('C:\\Users\\63220\Desktop\\删org）mapping.xls')
 def Del_org_mapping(JR,org_id,type):
     return engine_base.execute("DELETE from fund_org_mapping WHERE fund_id='{}' AND org_id='{}' AND org_type_code='{}'".format(JR, org_id,type))
 

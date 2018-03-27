@@ -42,7 +42,7 @@ now = time.strftime("%Y-%m-%d")
 
 def timeshow():
     all=[]
-    a=dateRange("2018-03-12","2018-03-22")
+    a=dateRange("2018-03-24","2018-03-26")
     for i in a:
         q=re.sub(r'2018-', '18', i)
         w=re.sub(r'-', '', q)
@@ -58,7 +58,7 @@ san2=timeshow()                           #~~~~~~~~~~~~~~~~可在上面固定日
 
 
 def id_list():
-    xx=list(range(500))
+    xx=list(range(1000))
     xx.pop(0)
     reall = []
     for date in san2:
@@ -75,30 +75,31 @@ def id_list():
 import random
 
 def crawl(list):
-    for ids in list:
-        break_count=3000      #最大失败数量为10
-        while break_count>0:
-            id=ids.pop(0)
-            jid=jiami_all(id)
-            print(jid)
-            J_return=url_return(jid)
-            if break_count==0:
-                break
-            elif J_return=='None':
-                print(id)
-                print("没有")
-                break_count = break_count - 1
+    # for ids in list:
+    break_count=3000      #最大失败数量为10
+    while break_count>0:
+        id=list.pop(0)
+        jid=jiami_all(id)
+        print(jid)
+        J_return=url_return(jid)
+        time.sleep(1)
+        if break_count==0:
+            break
+        elif J_return=='None':
+            print(id)
+            print("没有")
+            break_count = break_count - 1
 
-            else:
-                a = random.randint(1, 10)#随机1-15的日期
-                b = '1'
-                RR=[jid,J_return,id,a,b]
-                df=pd.DataFrame(RR)
-                dataframe=df.T
-                dataframe.columns =["fund_id","fund_name","id_time","priority","is_used"]
-                dataframe["source_id"]='020002'
-                print(dataframe)
-                to_sql("__id_search", engine_crawl_private, dataframe, type="update")
+        else:
+            a = random.randint(1, 10)#随机1-15的日期
+            b = '1'
+            RR=[jid,J_return,id,a,b]
+            df=pd.DataFrame(RR)
+            dataframe=df.T
+            dataframe.columns =["fund_id","fund_name","id_time","priority","is_used"]
+            dataframe["source_id"]='020002'
+            print(dataframe)
+            to_sql("__id_search", engine_crawl_private, dataframe, type="update")
 
 
 
@@ -109,7 +110,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 all=id_list()
 
-pool = ThreadPool(len(all))
+pool = ThreadPool(4)
 pool.map(crawl,all)
 pool.close()
 pool.join()

@@ -86,6 +86,7 @@ for ids in reall:
         jid=jiami_all(id)
         print(jid)
         J_return=url_return(jid)
+        time.sleep(1)
         if break_count==0:
             break
         elif J_return=='None':
