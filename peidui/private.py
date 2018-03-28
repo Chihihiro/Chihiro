@@ -228,12 +228,22 @@ def get_name(df1):
     df_info = init_2_f()[0]
     df1.rename(columns={"source_id":"fund_id"},inplace=True)
     a=match_port(df1,df_info,len(df1),len(df_info),d1_name='test_name',re_meth=1)
-    a.columns =["match_target","source_id","base_name","fund_id"]
-    b=a.iloc[:,[1,3]]
-    dict1 = {key: value for key, value in zip(b["source_id"], b["fund_id"])}
-    df1["fund_id_get"]=df1["fund_id"].apply(lambda x: dict1.get(x))
-    df1.rename(columns={"fund_id":"source_id"},inplace=True)
-    return df1
+    if isinstance(a,float):
+        print('没有匹配到x_info')
+        df1.rename(columns={"fund_id": "source_id"}, inplace=True)
+        df1["fund_id_get"]=None
+        df1["fund_id"]=None
+
+        return df1
+
+
+    else:
+        a.columns =["match_target","source_id","base_name","fund_id"]
+        b=a.iloc[:,[1,3]]
+        dict1 = {key: value for key, value in zip(b["source_id"], b["fund_id"])}
+        df1["fund_id_get"]=df1["fund_id"].apply(lambda x: dict1.get(x))
+        df1.rename(columns={"fund_id":"source_id"},inplace=True)
+        return df1
 
 
 
