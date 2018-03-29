@@ -528,7 +528,7 @@ dict_table = {"010002": "x_fund_info_fundaccount",
               }
 source='020003'
 
-fund_id='JR147099'
+fund_id='JR024681'
 
 # df = pd.read_sql("select source_id,source from id_match WHERE matched_id='{}' \
 #     and is_used=1 AND source not in ('03','04','05') and source not like '01%%'".format(fund_id), engine_base)
@@ -545,7 +545,7 @@ for i in source:
     dff.append(df1)
 
 
-df_m = pd.merge(dff[i] for i in range(len(dff),how='inner',on = 'statistic_date'))
+# df_m = pd.merge(dff[i] for i in range(len(dff),how='inner',on = 'statistic_date'))
 
 
 def _muti_merge(df_list, iteration):

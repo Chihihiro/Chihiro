@@ -18,7 +18,7 @@ def sync(fids):
     print(sql)
     df = pd.read_sql(sql, ENGINE_R)
     print("writing...")
-    io.to_sql(TABLE_TO_SYNC, ENGINE_W, df)
+    to_sql(TABLE_TO_SYNC, ENGINE_W, df)
     print("done")
 
 
