@@ -91,7 +91,7 @@ def fund_full_name(fund_id):
         c = df.iloc[i, 2]
         if b in ('020001', '020002', '020003'):
             name = pd.read_sql(
-                "SELECT DISTINCT fund_full_name FROM d_fund_info WHERE fund_id='{}' and source_id='{}' and  version>10".format(a, b),
+                "SELECT DISTINCT fund_name FROM d_fund_info WHERE fund_id='{}' and source_id='{}' and  version>10".format(a, b),
                 engine_crawl_private)
             try:
                 full_name = name.iloc[0, 0]

@@ -21,3 +21,14 @@ a["priority"]=7
 a["is_used"]=1
 print(a)
 to_sql("sync_source",engine_config_private,a,type="update")
+
+
+sql1 = "SELECT * FROM ( \
+        SELECT pk,source_id FROM config_private.sync_source WHERE is_used=1 AND source_id NOT in ('05','04','03') \
+        ) as b \
+        LEFT JOIN ( \
+        SELECT matched_id,source,source_id from base.id_match where id_type=1 and source not in ('010001','010002','010003','010004','010005') and is_used=1  \
+        ) as a ON a.matched_id=b.pk AND a.source=b.source_id"
+
+
+sq12 ="SELECT matched_id,source,source_id from base.id_match where id_type=1 and source not in ('010001','010002','010003','010004','010005') and is_used=1 "
