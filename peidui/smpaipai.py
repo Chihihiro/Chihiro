@@ -84,3 +84,8 @@ new["is_used"]=1
 new["is_del"]=0
 new.rename(columns={"fund_id":"matched_id"},inplace=True)
 # to_sql("id_match", engine_base, new, type="update")  # ignore
+
+
+
+from DataAPI import *
+df=DataAPI.MktEqudGet(secID=u"",ticker=u"600073",tradeDate=u"20150513",beginDate=u"",endDate=u"",isOpen="",field=u"",pandas="1")

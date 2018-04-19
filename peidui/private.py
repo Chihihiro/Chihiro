@@ -45,7 +45,14 @@ def df_futures():
     df_futures.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_futures
 
-
+def df_010006():
+    df_futures = pd.read_sql("SELECT * FROM (SELECT  fund_id, fund_name,reg_code \
+     FROM x_fund_info_010006 WHERE fund_id not in \
+    (SELECT source_id FROM base.id_match WHERE source='010006' and is_used=1) \
+    ORDER BY version DESC ) AS T  \
+    GROUP  BY T.fund_id", engine_crawl_private)
+    df_futures.rename(columns={"fund_id": "source_id", "fund_name": "test_name","reg_code":"reg_code_amac"}, inplace=True)
+    return df_futures
 
 
 
@@ -75,7 +82,7 @@ dict1 = {key: value for key, value in zip(table1["fund_full_name"], table1["fund
 
 def fund_full_name(fund_id):
     df = pd.read_sql("select source_id,source from id_match WHERE matched_id='{}' \
-    and is_used=1 AND source not in ('010001','000001','020004','020005','020007') and source not like '03%%' and source not like'04%%' and source not like'05%%'".format(
+    and is_used=1 AND source not in ('010001','000001','020004','020005','020007','020008') and source not like '03%%' and source not like'04%%' and source not like'05%%'".format(
         fund_id), engine_base)
     num = len(df)
 
@@ -222,61 +229,53 @@ source_private = '010003'
 source_securities = '010004'
 source_futures = '010005'
 
-
 from name.match_port import *
+
+
 def get_name(df1):
     df_info = init_2_f()[0]
-    df1.rename(columns={"source_id":"fund_id"},inplace=True)
-    a=match_port(df1,df_info,len(df1),len(df_info),d1_name='test_name',re_meth=1)
-    if isinstance(a,float):
+    try:
+        df1.rename(columns={"source_id": "fund_id"}, inplace=True)
+    except BaseException:
+        pass
+    else:
+        pass
+    a = match_port(df1, df_info, len(df1), len(df_info), d1_name='test_name', re_meth=1)
+    if isinstance(a, float):
         print('没有匹配到x_info')
         df1.rename(columns={"fund_id": "source_id"}, inplace=True)
-        df1["fund_id_get"]=None
-        df1["fund_id"]=None
+        df1["fund_id_get"] = None
+        df1["fund_id"] = None
 
         return df1
 
 
     else:
         a.columns =["match_target","source_id","base_name","fund_id"]
-        b=a.iloc[:,[1,3]]
+        b = a.iloc[:,[1,3]]
         dict1 = {key: value for key, value in zip(b["source_id"], b["fund_id"])}
         df1["fund_id_get"]=df1["fund_id"].apply(lambda x: dict1.get(x))
         df1.rename(columns={"fund_id":"source_id"},inplace=True)
         return df1
 
 
-
 fund_fundaccount = df_fundaccount()
-df1=get_name(fund_fundaccount)
+df1 = get_name(fund_fundaccount)
 over1 = id_match(df1, source_fundaccount)
 
 to_sql("id_match", engine_base, over1, type="update")  # ignore
 
-
-
 fund_private = df_private()
-df2=get_name(fund_private)
+df2 = get_name(fund_private)
 over2 = id_match(df2, source_private)
 to_sql("id_match", engine_base, over2, type="update")  # ignore
 
-
-
 fund_securities = df_securities()
-df3=get_name(fund_securities)
+df3 = get_name(fund_securities)
 over3 = id_match(df3, source_securities)
 to_sql("id_match", engine_base, over3, type="update")  # ignore
 
 fund_futures = df_futures()
-df4=get_name(fund_futures)
+df4 = get_name(fund_futures)
 over4 = id_match(df4, source_futures)
 to_sql("id_match", engine_base, over4, type="update")  # ignore
-
-
-
-
-
-
-
-
-
