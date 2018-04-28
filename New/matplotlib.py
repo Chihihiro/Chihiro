@@ -1,6 +1,7 @@
 import matplotlib as plt
-from New.nv_test_1 import *
-
+# from New.nv_test_1 import *
+from matplotlib import pyplot as plt
+import numpy as np
 
 fig=plt.figure(1)
 
@@ -11,20 +12,20 @@ fig=plt.figure(1)
 ax1=plt.subplot(111)
 
 #第三步，整理我们准备绘制的数据
-p=[]
-week=[]
-for i in list1:
-    a=i[0]
-    b=i[1]
-    p.append(b)
-    week.append(a)
-
-ww=[]
-for i in week:
-    a=i.replace('2017-','')
-    b=a.replace('2018-','')
-    ww.append(b)
-data=np.array(p)
+# p=[]
+# week=[]
+# for i in list1:
+#     a=i[0]
+#     b=i[1]
+#     p.append(b)
+#     week.append(a)
+#
+# ww=[]
+# for i in week:
+#     a=i.replace('2017-','')
+#     b=a.replace('2018-','')
+#     ww.append(b)
+# data=np.array(p)
 
 
 

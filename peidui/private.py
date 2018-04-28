@@ -1,5 +1,6 @@
 from engine import *
 
+
 def df_fundaccount():
     df_fundaccount = pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name_amac,reg_code_amac \
      FROM x_fund_info_fundaccount WHERE fund_id not in \
@@ -45,15 +46,16 @@ def df_futures():
     df_futures.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
     return df_futures
 
+
 def df_010006():
     df_futures = pd.read_sql("SELECT * FROM (SELECT  fund_id, fund_name,reg_code \
      FROM x_fund_info_010006 WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010006' and is_used=1) \
     ORDER BY version DESC ) AS T  \
     GROUP  BY T.fund_id", engine_crawl_private)
-    df_futures.rename(columns={"fund_id": "source_id", "fund_name": "test_name","reg_code":"reg_code_amac"}, inplace=True)
+    df_futures.rename(columns={"fund_id": "source_id", "fund_name": "test_name", "reg_code": "reg_code_amac"},
+                      inplace=True)
     return df_futures
-
 
 
 dict_table = {"010002": "x_fund_info_fundaccount",
@@ -80,6 +82,7 @@ no = 'no'
 table1 = pd.read_sql("select fund_full_name,fund_id from fund_info", engine_base)
 dict1 = {key: value for key, value in zip(table1["fund_full_name"], table1["fund_id"])}
 
+
 def fund_full_name(fund_id):
     df = pd.read_sql("select source_id,source from id_match WHERE matched_id='{}' \
     and is_used=1 AND source not in ('010001','000001','020004','020005','020007','020008') and source not like '03%%' and source not like'04%%' and source not like'05%%'".format(
@@ -94,7 +97,8 @@ def fund_full_name(fund_id):
         c = df.iloc[i, 2]
         if b in ('020001', '020002', '020003'):
             name = pd.read_sql(
-                "SELECT DISTINCT fund_full_name FROM d_fund_info WHERE fund_id='{}' and source_id='{}' and  version>10".format(a, b),
+                "SELECT DISTINCT fund_full_name FROM d_fund_info WHERE fund_id='{}' and source_id='{}' and  version>10".format(
+                    a, b),
                 engine_crawl_private)
             try:
                 full_name = name.iloc[0, 0]
@@ -126,7 +130,7 @@ def test2(private_null):
         # private_null["fund_id"] = private_null["test_name"].apply(lambda x: dict1.get(x))
         no = private_null.fillna("空")
         del no["fund_id"]
-        no.rename(columns={"fund_id_get":"fund_id"},inplace=True)
+        no.rename(columns={"fund_id_get": "fund_id"}, inplace=True)
         c = no[no['fund_id'] != '空']
         d = no[no['fund_id'] == '空']
 
@@ -251,11 +255,11 @@ def get_name(df1):
 
 
     else:
-        a.columns =["match_target","source_id","base_name","fund_id"]
-        b = a.iloc[:,[1,3]]
+        a.columns = ["match_target", "source_id", "base_name", "fund_id"]
+        b = a.iloc[:, [1, 3]]
         dict1 = {key: value for key, value in zip(b["source_id"], b["fund_id"])}
-        df1["fund_id_get"]=df1["fund_id"].apply(lambda x: dict1.get(x))
-        df1.rename(columns={"fund_id":"source_id"},inplace=True)
+        df1["fund_id_get"] = df1["fund_id"].apply(lambda x: dict1.get(x))
+        df1.rename(columns={"fund_id": "source_id"}, inplace=True)
         return df1
 
 
@@ -263,19 +267,19 @@ fund_fundaccount = df_fundaccount()
 df1 = get_name(fund_fundaccount)
 over1 = id_match(df1, source_fundaccount)
 
-to_sql("id_match", engine_base, over1, type="update")  # ignore
+to_sql("id_match", engine_base, over1, type="update")
 
 fund_private = df_private()
 df2 = get_name(fund_private)
 over2 = id_match(df2, source_private)
-to_sql("id_match", engine_base, over2, type="update")  # ignore
+to_sql("id_match", engine_base, over2, type="update")
 
 fund_securities = df_securities()
 df3 = get_name(fund_securities)
 over3 = id_match(df3, source_securities)
-to_sql("id_match", engine_base, over3, type="update")  # ignore
+to_sql("id_match", engine_base, over3, type="update")
 
 fund_futures = df_futures()
 df4 = get_name(fund_futures)
 over4 = id_match(df4, source_futures)
-to_sql("id_match", engine_base, over4, type="update")  # ignore
+to_sql("id_match", engine_base, over4, type="update")
