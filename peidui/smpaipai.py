@@ -7,9 +7,8 @@ def df_jfz():
     and source_id = '020008'  AND is_used=1  \
     ORDER BY version DESC ) AS T GROUP  BY T.fund_id", engine_crawl_private)
     df_fundaccount.rename(columns={"fund_id": "source_id", "fund_full_name": "test_name"
-                                   ,"reg_code":"jfz_reg_code","foundation_date":"jfz_foundation_date"}, inplace=True)
+        , "reg_code": "jfz_reg_code", "foundation_date": "jfz_foundation_date"}, inplace=True)
     return df_fundaccount
-
 
 
 def df_info():
@@ -61,6 +60,7 @@ def fund_full_name(fund_id):
     list = to_list(L)
     return list
 
+
 table_reg_code = pd.read_sql("select reg_code,fund_id from fund_info where reg_code is not NULL", engine_base)
 table_reg_code["reg_code"] = table_reg_code["reg_code"].apply(lambda x: x.strip())
 dict = {key: value for key, value in zip(table_reg_code["reg_code"], table_reg_code["fund_id"])}
@@ -73,19 +73,19 @@ def test2(df):
     return df
 
 
-
-df=df_jfz()
-a=test2(df)
-df1 =a.loc[a["fund_id"].notnull()]
-new=df1.loc[:,["fund_id","source_id"]]
-new["id_type"]=1
-new["source"]='020008'
-new["is_used"]=1
-new["is_del"]=0
-new.rename(columns={"fund_id":"matched_id"},inplace=True)
+df = df_jfz()
+a = test2(df)
+df1 = a.loc[a["fund_id"].notnull()]
+new = df1.loc[:, ["fund_id", "source_id"]]
+new["id_type"] = 1
+new["source"] = '020008'
+new["is_used"] = 1
+new["is_del"] = 0
+new.rename(columns={"fund_id": "matched_id"}, inplace=True)
 # to_sql("id_match", engine_base, new, type="update")  # ignore
 
 
-
 from DataAPI import *
-df=DataAPI.MktEqudGet(secID=u"",ticker=u"600073",tradeDate=u"20150513",beginDate=u"",endDate=u"",isOpen="",field=u"",pandas="1")
+
+df = DataAPI.MktEqudGet(secID=u"", ticker=u"600073", tradeDate=u"20150513", beginDate=u"", endDate=u"", isOpen="",
+                        field=u"", pandas="1")

@@ -37,6 +37,11 @@ engine_base_test = create_engine(
     "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'base_test', ),
     connect_args={"charset": "utf8"}, echo=True, )
 
+
+engine_crawl_public = create_engine(
+    "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl_public', ),
+    connect_args={"charset": "utf8"}, echo=True, )
+
 def to_table(df):
     df.to_csv("C:\\Users\\63220\\Desktop\\Pycharm测试{}.csv".format(now2))
 
@@ -58,8 +63,8 @@ def to_zd(df):
 
 
 def to_list(df):
-    a = np.array(df)  # np.ndarray()
-    vv = a.tolist()  # list
+    a = np.array(df)
+    vv = a.tolist()
     return vv
 
 
@@ -96,15 +101,15 @@ def info_to_table():
     print('已经保存桌面')
 
 
-dict_table = {"010002": "x_fund_info_fundaccount",
-              "010003": "x_fund_info_private",
-              "010004": "x_fund_info_securities",
-              "010005": "x_fund_info_futures",
-              "020001": "d_fund_info",
-              "020002": "d_fund_info",
-              "020003": "d_fund_info",
-              "020008": "d_fund_info",
-              }
+dict_table_private = {"010002": "x_fund_info_fundaccount",
+                       "010003": "x_fund_info_private",
+                       "010004": "x_fund_info_securities",
+                       "010005": "x_fund_info_futures",
+                       "020001": "d_fund_info",
+                       "020002": "d_fund_info",
+                       "020003": "d_fund_info",
+                       "020008": "d_fund_info",
+                       }
 
 
 def fund_full_name(fund_id):
@@ -113,7 +118,7 @@ def fund_full_name(fund_id):
         fund_id), engine_base)
     num = len(df)
 
-    df['fund_tabel'] = df['source'].apply(lambda x: dict_table.get(x))
+    df['fund_tabel'] = df['source'].apply(lambda x: dict_table_private.get(x))
     df["fund_full_name"] = None
     for i in range(num):
         a = df.iloc[i, 0]
@@ -170,3 +175,33 @@ def turn_dict(lst):
             subdic = turn_dict(item)
             dic.update(subdic)
     return dic
+
+
+
+def sub_wrong_to_none(x):
+    s = re.sub("\s|-| |--|---", "", x)
+    if s == "":
+        return None
+    else:
+        return s
+
+
+
+def clean_amount(string):
+    unit_trans = {"万": 1, "亿": 1e4}
+    sre = re.search("(?P<amt>\d*(\.\d*)?)(?P<unit>万|亿).*", string)
+    if sre:
+        return float(sre.groupdict()["amt"]) * unit_trans.get(sre.groupdict()["unit"], 1)
+    return None
+
+
+engine_crawl_public = create_engine("mysql+pymysql://root:smyt0317@58cb57c164977.sh.cdb.myqcloud.com:4171/crawl_public",
+                                    connect_args={"charset": "utf8"})
+
+
+
+# alist = ['空','空']
+# for i in range(len(alist)-1,-1,-1): # 倒序循环，从最后一个元素循环到第一个元素。不能用正序循环，因为正序循环删除元素后后续的列表的长度和元素下标同时也跟着变了，len(alist)是动态的。
+#     if alist[i] == '空':
+#         alist.pop(i) # 将index=i处的元素删除并return该元素。如果不想保存这个被删除的值只要不把alist.pop(i)赋值给变量就好，不影响程序运行。
+# print(alist) # [7, 4, 2, 1]

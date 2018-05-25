@@ -21,7 +21,6 @@ def df_private():
     ORDER BY version DESC ) AS T \
     GROUP  BY T.fund_id", engine_crawl_private)
     df_private.rename(columns={"fund_id": "source_id", "fund_name_amac": "test_name"}, inplace=True)
-    # df_private["private_id"]=df_private["private_id"].apply(lambda x: 'ID:'+str(x))
     return df_private
 
 
@@ -266,10 +265,9 @@ def get_name(df1):
 fund_fundaccount = df_fundaccount()
 df1 = get_name(fund_fundaccount)
 over1 = id_match(df1, source_fundaccount)
-
 to_sql("id_match", engine_base, over1, type="update")
 
-fund_private = df_private()
+fund_private = df_private()[0]
 df2 = get_name(fund_private)
 over2 = id_match(df2, source_private)
 to_sql("id_match", engine_base, over2, type="update")

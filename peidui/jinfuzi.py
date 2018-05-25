@@ -7,9 +7,8 @@ def df_jfz():
     and source_id = '020002' and version>10 AND is_used=1  \
     ORDER BY version DESC ) AS T GROUP  BY T.fund_id", engine_crawl_private)
     df_fundaccount.rename(columns={"fund_id": "source_id", "fund_full_name": "test_name"
-                                   ,"reg_code":"jfz_reg_code","foundation_date":"jfz_foundation_date"}, inplace=True)
+        , "reg_code": "jfz_reg_code", "foundation_date": "jfz_foundation_date"}, inplace=True)
     return df_fundaccount
-
 
 
 def df_info():
@@ -61,6 +60,7 @@ def fund_full_name(fund_id):
     list = to_list(L)
     return list
 
+
 table_reg_code = pd.read_sql("select reg_code,fund_id from fund_info where reg_code is not NULL", engine_base)
 table_reg_code["reg_code"] = table_reg_code["reg_code"].apply(lambda x: x.strip())
 dict = {key: value for key, value in zip(table_reg_code["reg_code"], table_reg_code["fund_id"])}
@@ -73,21 +73,13 @@ def test2(df):
     return df
 
 
-
-df=df_jfz()
-a=test2(df)
-df1 =a.loc[a["fund_id"].notnull()]
-new=df1.loc[:,["fund_id","source_id"]]
-new["id_type"]=1
-new["source"]='020002'
-new["is_used"]=1
-new["is_del"]=0
-new.rename(columns={"fund_id":"matched_id"},inplace=True)
-to_sql("id_match", engine_base, new, type="update")  # ignore
-
-
-# c=pd.read_sql("SELECT t.source_id,t.fund_id,t.fund_name,c.name_detail,t.count,t.min from  \
-# (select  DISTINCT source_id,fund_id,fund_name,COUNT(fund_id) as count, \
-# MIN(statistic_date) as min from s_fund_nv where  fund_id not in (SELECT source_id from base.id_match where id_type=1) and is_used=1 \
-# GROUP  BY fund_id) AS t  \
-# LEFT JOIN config_private.source_info AS c on t.source_id=c.source_id;",engine_crawl_private)
+df = df_jfz()
+a = test2(df)
+df1 = a.loc[a["fund_id"].notnull()]
+new = df1.loc[:, ["fund_id", "source_id"]]
+new["id_type"] = 1
+new["source"] = '020002'
+new["is_used"] = 1
+new["is_del"] = 0
+new.rename(columns={"fund_id": "matched_id"}, inplace=True)
+# to_sql("id_match", engine_base, new, type="update")  # ignore

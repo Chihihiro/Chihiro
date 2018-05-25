@@ -65,7 +65,7 @@ def daterange(beginDate, endDate):
 
 def timeshow():
     all = []
-    a = daterange("2018-04-25", "2018-04-28")
+    a = daterange("2018-05-21", "2018-05-25")
     for i in a:
         q = re.sub(r'2018-', '18', i)
         w = re.sub(r'-', '', q)
@@ -102,7 +102,7 @@ engine3 = create_engine(
     "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl_private', ),
     connect_args={"charset": "utf8"}, echo=True, )
 for ids in reall:
-    break_count = 600  # 最大失败数量为10
+    break_count = 300  # 最大失败数量为10
     while break_count > 0:
         id = ids.pop(0)
         jid = jiami_all(id)

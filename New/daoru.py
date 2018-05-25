@@ -1,7 +1,7 @@
 from New.iosjk import to_sql
 from engine import *
 
-df = pd.read_excel('C:\\Users\\63220\Desktop\\id_match20180417.xls', dtype=str)  # dtype=str
+df = pd.read_excel('C:\\Users\\63220\Desktop\\id_match20180520.xls', dtype=str)  # dtype=str
 # df["jfz_timeid"]=df["jfz_timeid"].apply(lambda x:'%.0f' % x if x is not None else None)
 # df["confirmed"]=df["confirmed"].apply(lambda x: '00'+str(x))
 # df["source_id"]=df["source_id"].apply(lambda x: int(x))
@@ -18,10 +18,6 @@ df = pd.read_excel('C:\\Users\\63220\Desktop\\id_match20180417.xls', dtype=str) 
 # df["target_table"]="fund_nv_data_standard"
 # df["data_source"]='000001'
 # df["typestandard_code"]=df["typestandard_code"].apply(lambda x: '0'+str(x))
-# print(df)
-# exit()
-
-# df["stype_name"]="中间级（夹层）"
 # df["target_table"]="fund_nv_data_standard"
 # df["version"]=2018040316
 # df["source_id"]='020007'
@@ -64,3 +60,4 @@ def Del_org_mapping(JR, org_id, type):
 
 
 import tushare
+

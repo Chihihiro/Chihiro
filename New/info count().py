@@ -25,11 +25,11 @@ def diff(listA, listB):
 
 
 def pk(T1, T2):
-    table = pd.read_sql("show columns from {}".format(T1), engine_base)
+    table = pd.read_sql("show columns from {}".format(T1), engine_data_test)
     t1 = table["Field"]
     t11 = to_list(t1)
 
-    table2 = pd.read_sql("show columns from {}".format(T2), engine_base_test)
+    table2 = pd.read_sql("show columns from {}".format(T2), engine_base)
     t2 = table2["Field"]
     t22 = to_list(t2)
 
@@ -37,8 +37,8 @@ def pk(T1, T2):
     x = x1[:-3]
     str4 = ",".join(x)
 
-    info = pd.read_sql("select {} from {}".format(str4, T1), engine_base)
-    info2 = pd.read_sql("select {} from {}".format(str4, T2), engine_base_test)
+    info = pd.read_sql("select {} from {}".format(str4, T1), engine_data_test)
+    info2 = pd.read_sql("select {} from {}".format(str4, T2), engine_base)
     df = check_dataframe(info, x)
     df2 = check_dataframe(info2, x)
     # del info["fund_consultant"]
@@ -73,8 +73,8 @@ def pk(T1, T2):
     return df_all
 
 
-T1 = 'org_info'
-T2 = 'org_info_20180327'
+T1 = 'fund_info_test001'
+T2 = 'fund_info'
 df_all = pk(T1, T2)
 to_table(df_all)
 
