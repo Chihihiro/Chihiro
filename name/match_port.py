@@ -15,7 +15,6 @@ from collections import Counter
 import pickle
 
 
-
 def init_1():
     """
     初始化测试集的数据 (来源私募运通数据库 fund_info表)
@@ -127,9 +126,9 @@ def init_update():
     script_path = os.path.realpath(__file__)
     script_dir = os.path.dirname(script_path)
     fund_name_file = os.path.join(script_dir, 'local_data_3-20.pkl')
-    f=open(fund_name_file, "wb")
-    pickle.dump(fund_name, f,True)
-    pickle.dump(fund_name2, f,True)
+    f = open(fund_name_file, "wb")
+    pickle.dump(fund_name, f, True)
+    pickle.dump(fund_name2, f, True)
     f.close()
     return fund_name, fund_name2, ntest, nrow
 
@@ -434,12 +433,12 @@ def choose_best(fund_found_list, model):
         fund_name_t = fund_name
     else:
         fund_name_t = fund_name[0]
-    t1=sub_chi2num(col_chi(strQ2B(fund_name_t)))
-    t1=''.join([x for x in jieba.lcut(t1) if x not in tyc_word])
+    t1 = sub_chi2num(col_chi(strQ2B(fund_name_t)))
+    t1 = ''.join([x for x in jieba.lcut(t1) if x not in tyc_word])
     for i in range(nlist):
         temp = simi_vec(fund_name_t, fund_found_list[i][1], model)
         t2 = sub_chi2num(col_chi(strQ2B(fund_found_list[i][1])))
-        t2 =''.join([x for x in jieba.lcut(t2) if x not in tyc_word])
+        t2 = ''.join([x for x in jieba.lcut(t2) if x not in tyc_word])
         if temp != 0:
             temp = 1 / temp
         else:
@@ -456,14 +455,14 @@ def choose_best(fund_found_list, model):
         min_name = [fund_name, fund_found_list[min_index][1], fund_found_list[min_index][2]]
     else:
         min_name = [fund_name, fund_found_list[min_index][1]]
-    if min_dis>50: #过滤距离大于100的基金，阈值可调整
+    if min_dis > 50:  # 过滤距离大于100的基金，阈值可调整
         return np.nan
-    if min_ld>0:
+    if min_ld > 0:
         return np.nan
     return min_name
 
 
-def match_name(fund_name, fund_name2, range, range2, col_name, col_name2, primary_key=None, how=1):
+def match_name(fund_name, fund_name2, range1, range2, col_name, col_name2, primary_key=None, how=1):
     """
     从fund_name2_aft的col_name2的range2范围中匹配fund_name的_col_nam1的range范围中的基金名称，比对基金名称并返回一个dataframe
     返回的dataframe中第一列为fund_id,第二列为souce_ID，第三列为raw_fund_name,第四列为match_fund_name,第五列为可能的列表:raw_list,第六列为程序匹配名match_prog_name
@@ -513,11 +512,20 @@ def match_name(fund_name, fund_name2, range, range2, col_name, col_name2, primar
     # 格式化比对名称
     fund_name2_aft = init_2_f_aft(fund_name2, col_name2)
     if is_primary_key:
-        t1 = pd.DataFrame(fund_name.loc[range, [col_name, primary_key]].apply(raw_list, args=(
-            fund_name2_aft, col_name2, range2, primary_key), axis=1), columns=['raw_list'])
+        test=fund_name.loc[range1, [col_name, primary_key]]
+        ggg=[]
+        for i in range(len(test)):
+            ggg.append(raw_list(test.iloc[i,:],fund_name2_aft, col_name2, range2, primary_key))
+        ggg_dict={'raw_list':ggg}
+        t1 = pd.DataFrame(ggg_dict)
     else:
-        t1 = pd.DataFrame(fund_name.loc[range, col_name].apply(raw_list, args=(
-            fund_name2_aft, col_name2, range2, primary_key))).rename(columns={col_name: 'raw_list'})
+        test=fund_name.loc[range1, [col_name]]
+        ggg = []
+        for i in range(len(test)):
+            ggg.append(raw_list(test.iloc[i, :], fund_name2_aft, col_name2, range2, primary_key))
+        ggg_dict = {'raw_list': ggg}
+        t1 = pd.DataFrame(ggg_dict)
+
     t2 = pd.DataFrame(t1.loc[:, "raw_list"].apply(choose_best, args=([model]))).rename(
         columns={'raw_list': 'best_name'})
     if how == 1:
@@ -548,29 +556,30 @@ def reshape(data, primary_key=None, how=2):
     res_frame - dataframe
 
     """
-    if how==2:
+    if how == 2:
         if primary_key:
             if data.empty:
                 return np.nan
             data_list = data['raw_list'].tolist()
             best_name = data['best_name'].tolist()
-            new_list=[]
+            new_list = []
             for i in range(len(data_list)):
-                ii=data_list[i]
+                ii = data_list[i]
                 fund_name_ori = ii[0][0][0]
                 fund_id_ori = ii[0][0][1]
-                if isinstance(best_name[i],float):
-                    match_best_name=np.nan
-                    match_best_id=np.nan
+                if isinstance(best_name[i], float):
+                    match_best_name = np.nan
+                    match_best_id = np.nan
                 else:
-                    match_best_name=best_name[i][1]
+                    match_best_name = best_name[i][1]
                     match_best_id = best_name[i][2]
                 for jj in ii:
                     match_name = jj[1]
                     match_id = jj[2]
                     row_list = (fund_name_ori, fund_id_ori, match_name, match_id, match_best_name, match_best_id)
                     new_list.append(row_list)
-            new_tes = pd.DataFrame(new_list, columns=['match_target', primary_key, 'matched', primary_key,'best_name',primary_key])
+            new_tes = pd.DataFrame(new_list, columns=['match_target', primary_key, 'matched', primary_key, 'best_name',
+                                                      primary_key])
         else:
             if data.empty:
                 return np.nan
@@ -581,49 +590,49 @@ def reshape(data, primary_key=None, how=2):
                 ii = data_list[i]
                 fund_name_ori = ii[0][0]
                 if isinstance(best_name[i], float):
-                    match_best_name=np.nan
+                    match_best_name = np.nan
                 else:
-                    match_best_name=best_name[i][1]
+                    match_best_name = best_name[i][1]
                 for jj in ii:
                     match_name = jj[1]
-                    row_list = (fund_name_ori, match_name,match_best_name)
+                    row_list = (fund_name_ori, match_name, match_best_name)
                     new_list.append(row_list)
-            new_tes = pd.DataFrame(new_list, columns=['match_target', 'matched','best_name'])
-    elif how==1:
+            new_tes = pd.DataFrame(new_list, columns=['match_target', 'matched', 'best_name'])
+    elif how == 1:
         if primary_key:
             if data.empty:
                 return np.nan
             best_name = data['best_name'].tolist()
-            new_list=[]
+            new_list = []
             for i in range(len(best_name)):
-                if isinstance(best_name[i],float):
+                if isinstance(best_name[i], float):
                     continue
                 else:
-                    match_best_name=best_name[i][1]
+                    match_best_name = best_name[i][1]
                     match_best_id = best_name[i][2]
-                    fund_name_ori=best_name[i][0][0]
-                    fund_id_ori=best_name[i][0][1]
+                    fund_name_ori = best_name[i][0][0]
+                    fund_id_ori = best_name[i][0][1]
                 row_list = (fund_name_ori, fund_id_ori, match_best_name, match_best_id)
                 new_list.append(row_list)
-            new_tes = pd.DataFrame(new_list, columns=['match_target', primary_key, 'best_name',primary_key])
+            new_tes = pd.DataFrame(new_list, columns=['match_target', primary_key, 'best_name', primary_key])
         else:
             if data.empty:
                 return np.nan
             best_name = data['best_name'].tolist()
-            new_list=[]
+            new_list = []
             for i in range(len(best_name)):
-                if isinstance(best_name[i],float):
+                if isinstance(best_name[i], float):
                     continue
                 else:
-                    match_best_name=best_name[i][1]
-                    fund_name_ori=best_name[i][0]
+                    match_best_name = best_name[i][1]
+                    fund_name_ori = best_name[i][0]
 
                 row_list = (fund_name_ori, match_best_name)
                 new_list.append(row_list)
-            new_tes = pd.DataFrame(new_list, columns=['match_target',  'best_name'])
+            new_tes = pd.DataFrame(new_list, columns=['match_target', 'best_name'])
     else:
         print('Method error! Using default methed')
-        new_tes=reshape(data, primary_key)
+        new_tes = reshape(data, primary_key)
     return new_tes
 
 
@@ -657,6 +666,7 @@ def simi_vec(str1, str2, model):
     sim = 1.0 / (1.0 + dist)
     return sim
 
+
 def df_private():
     engine = create_engine('mysql+pymysql://jr_read_17:jr_read_17@182.254.128.241:4171/crawl_private?charset=utf8')
     df_private = pd.read_sql("SELECT * FROM (SELECT  fund_id \
@@ -669,39 +679,42 @@ def df_private():
     df_private.rename(columns={"fund_name_amac": "test_name"}, inplace=True)
     # df_private["private_id"]=df_private["private_id"].apply(lambda x: 'ID:'+str(x))
     print(len(df_private))
-    return df_private,len(df_private)
+    return df_private, len(df_private)
+
 
 def init_match():
     global gg
-    gg=0
+    gg = 0
     global simmi
-    simmi=[]
+    simmi = []
     global tyc_word
-    tyc_word=[]
+    tyc_word = []
     global white_word
     white_word = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 
-def match_port(fund_name, fund_name2,ntest, nrow, d1_name='fund_full_name',
-                              d2_name='fund_full_name', primary_key='fund_id', how=5,re_meth=2,excel_name='match.xlsx'):
+
+def match_port(fund_name, fund_name2, ntest, nrow, d1_name='test_name',
+               d2_name='fund_full_name', primary_key='fund_id', how=5, re_meth=2, excel_name='match.xlsx'):
     init_jieba()
     init_match()
-    #'''
-    try:
-        res_data = match_name(fund_name, fund_name2,range(ntest), range(nrow), d1_name,
+    # '''
+    #try:
+    res_data = match_name(fund_name, fund_name2, range(ntest), range(nrow), d1_name,
                               d2_name, primary_key=primary_key, how=how)
-    except "Primary_error":
-        print("The primary key doesn't exist in both of the dataframe.")
-    except "How error":
-        print("Output method error.")
+    #except "Primary_error":
+        #print("The primary key doesn't exist in both of the dataframe.")
+    #except "How error":
+        #print("Output method error.")
 
-    res_data.dropna(how='any',inplace=True)
-    res_get=reshape(res_data,'fund_id',re_meth)
+    res_data.dropna(how='any', inplace=True)
+    res_get = reshape(res_data, 'fund_id', re_meth)
 
     # writer = pd.ExcelWriter(excel_name)
     # res_get.to_excel(writer, "Sheet1")
     # writer.save()
     return res_get
 
+
 if __name__ == '__main__':
     [fund_name, fund_name2, ntest, nrow] = init_update()
-    res_get=match_port(fund_name, fund_name2, ntest, nrow, d1_name='test_name',how=5)
+    res_get = match_port(fund_name, fund_name2, ntest, nrow, d1_name='test_name', how=5)

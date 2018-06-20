@@ -71,7 +71,10 @@ def pu_all3():
 
 def daochu():
     shanchu = "'519513',	'002437',	'003859',	'001368',	'004383',	'004384',	'004704',	'001568',	'002239',	'004539',	'004540',	'161630',	'511890','519131'"
-
+    # SELECT * FROM
+    # base_public.fund_info
+    # WHERE
+    # fund_status <> '终止'
     df = pd.read_sql("SELECT version,fund_id,fund_name,statistic_date,nav,added_nav,statistic_date_wind,nav_wind,added_nav_wind\
                     FROM fund_nv WHERE  version = '{}' AND fund_id NOT IN ({})".format(now, shanchu), engine5)
 
@@ -99,7 +102,8 @@ def wind_pull():
     df["nav_wind"] = df["nav_wind"].apply(lambda x: '%.4f' % x)
     df["added_nav_wind"] = df["added_nav_wind"].apply(lambda x: '%.4f' % x)
     df["version"] = now
-    to_sql("fund_nv", engine5, df, type="update")
+    df2 = df[(df.nav_wind != '0.0000') & (df.added_nav_wind != '0.0000')]
+    to_sql("fund_nv", engine5, df2, type="update")
     return print("wind公募全量提取到本地库")
 
 

@@ -65,7 +65,7 @@ def daterange(beginDate, endDate):
 
 def timeshow():
     all = []
-    a = daterange("2018-05-21", "2018-05-25")
+    a = daterange("2018-06-07", "2018-06-14")
     for i in a:
         q = re.sub(r'2018-', '18', i)
         w = re.sub(r'-', '', q)

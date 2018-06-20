@@ -72,9 +72,11 @@ now = time.strftime("%Y-%m-%d")
 now2 = time.strftime("%Y%m%d%H%M")
 
 
+from datetime import date,timedelta
+
 def now_time(a=0):
-    now = datetime.datetime.now()
-    delta = datetime.timedelta(days=a)
+    now = datetime.now()
+    delta = timedelta(days=a)
     n_days = now + delta
     print(n_days.strftime('%Y-%m-%d %H:%M:%S'))
     f = n_days.strftime('%Y-%m-%d')

@@ -118,7 +118,7 @@ def fund_full_name(fund_id):
     return list
 
 
-def test2(private_null):
+def atest2(private_null):
     if private_null.empty:
         print("米有匹配到")
         c = []
@@ -136,7 +136,7 @@ def test2(private_null):
         return c, d
 
 
-def test1(private):
+def atest1(private):
     if private.empty:
         print("米有匹配到")
         a = []
@@ -172,8 +172,8 @@ def id_match(fund_info, source):
     fund_info["fund_id"] = fund_info["reg_code_amac"].apply(lambda x: dict.get(x))
     private = fund_info.loc[fund_info["fund_id"].notnull()]
     private_null = fund_info.loc[fund_info["fund_id"].isnull()]
-    t1 = test1(private)
-    t2 = test2(private_null)
+    t1 = atest1(private)
+    t2 = atest2(private_null)
     a = t1[0]
     # b = t1[1] #pass 掉
     c = t2[0]
@@ -232,7 +232,7 @@ source_private = '010003'
 source_securities = '010004'
 source_futures = '010005'
 
-from name.match_port import *
+from name.match_port import match_port, init_2_f
 
 
 def get_name(df1):
@@ -261,23 +261,23 @@ def get_name(df1):
         df1.rename(columns={"fund_id": "source_id"}, inplace=True)
         return df1
 
-
+#
 fund_fundaccount = df_fundaccount()
 df1 = get_name(fund_fundaccount)
 over1 = id_match(df1, source_fundaccount)
-to_sql("id_match", engine_base, over1, type="update")
-
-fund_private = df_private()[0]
+# to_sql("id_match", engine_base, over1, type="update")
+#
+fund_private = df_private()
 df2 = get_name(fund_private)
 over2 = id_match(df2, source_private)
-to_sql("id_match", engine_base, over2, type="update")
-
-fund_securities = df_securities()
-df3 = get_name(fund_securities)
-over3 = id_match(df3, source_securities)
-to_sql("id_match", engine_base, over3, type="update")
-
-fund_futures = df_futures()
-df4 = get_name(fund_futures)
-over4 = id_match(df4, source_futures)
-to_sql("id_match", engine_base, over4, type="update")
+# to_sql("id_match", engine_base, over2, type="update")
+# #
+# fund_securities = df_securities()
+# df3 = get_name(fund_securities)
+# over3 = id_match(df3, source_securities)
+# to_sql("id_match", engine_base, over3, type="update")
+#
+# fund_futures = df_futures()
+# df4 = get_name(fund_futures)
+# over4 = id_match(df4, source_futures)
+# to_sql("id_match", engine_base, over4, type="update")

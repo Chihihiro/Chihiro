@@ -1,8 +1,6 @@
 from engine import *
 
 
-
-
 def is_B0(JR, statistic_date):
     return engine_data_test.execute("update fund_nv_data_standard_3000 set is_abnormal=0 where fund_id='{}' and statistic_date\
                                                     ='{}' ".format(JR, statistic_date))
@@ -215,66 +213,62 @@ def check():
         else:
             pass
 
-
+#
 # def len_JR():
 #     JR_all = pd.read_sql("select DISTINCT fund_id FROM fund_nv_data_standard", engine_base)
 #     # JR_all = pd.read_sql("SELECT DISTINCT fund_id from fund_nv_data_standard where nav<0.1", engine_base)
 #     bb = np.array(JR_all)
 #     vv = bb.tolist()  # list
-#     ALL=[]
+#     ALL = []
 #     for i in vv:
 #         for o in i:
 #             ALL.append(o)
 #
-#     a=len(ALL)
-#     b=int(a/10)
+#     a = len(ALL)
+#     b = int(a / 10)
 #     all = []
 #     for i in range(b):
-#         a=ALL[i*10:(i*10+10)]
+#         a = ALL[i * 10:(i * 10 + 10)]
 #         all.append(a)
-#     all.append(ALL[b*10:])
+#     all.append(ALL[b * 10:])
 #     return all
 #
-
-
+# from multiprocessing.dummy import Pool as ThreadPool
 # all = len_JR()
 # pool = ThreadPool(20)
-# pool.map(crawl,all)
+# pool.map(yansuan, all)
 # pool.close()
 # pool.join()
 
 
-def sync_source(source):
-    df = pd.read_sql(" select i.matched_id,i.source FROM (SELECT fund_id FROM d_fund_nv WHERE source_id='{a}'  GROUP BY fund_id HAVING COUNT(*)>=3) as cl \
-        LEFT JOIN (SELECT matched_id,source_id,source FROM base.id_match WHERE source='{a}') as i \
-        on cl.fund_id = i.source_id LEFT JOIN (SELECT pk,priority,is_used FROM config_private.sync_source where source_id='{a}' and is_used=1) as sy \
-         ON sy.pk = i.matched_id where sy.pk is NULL AND i.matched_id is not NULL ".format(a=source),
-                     engine_crawl_private)
-    return df
 
-
-def id_count():
-    df = pd.read_sql("SELECT fund_id,source_id FROM d_fund_nv GROUP BY fund_id HAVING COUNT(*)>=3",
-                     engine_crawl_private)
-    to_sql("id_count3", engine_data_test, df, type="update")
-
-
-def sync_ids(fund_id):
-    df = pd.read_sql(
-        "SELECT fund_id,source_id FROM base.fund_nv_data_source_copy2 where fund_id = '{}'  GROUP BY source_id HAVING COUNT(*)>=3".format(
-            fund_id), engine_base)
-    return df
-
-
-jr_list = sync_source("020003")
-
-JR = to_list(jr_list["matched_id"])
-
-
-for I in JR:
-    yansuan(I,'020003')
-check()
-print("DOWN" + '\n' + now2)
-
-
-
+# def sync_source(source):
+#     df = pd.read_sql(" select i.matched_id,i.source FROM (SELECT fund_id FROM d_fund_nv WHERE source_id='{a}'  GROUP BY fund_id HAVING COUNT(*)>=3) as cl \
+#         LEFT JOIN (SELECT matched_id,source_id,source FROM base.id_match WHERE source='{a}') as i \
+#         on cl.fund_id = i.source_id LEFT JOIN (SELECT pk,priority,is_used FROM config_private.sync_source where source_id='{a}' and is_used=1) as sy \
+#          ON sy.pk = i.matched_id where sy.pk is NULL AND i.matched_id is not NULL ".format(a=source),
+#                      engine_crawl_private)
+#     return df
+#
+#
+# def id_count():
+#     df = pd.read_sql("SELECT fund_id,source_id FROM d_fund_nv GROUP BY fund_id HAVING COUNT(*)>=3",
+#                      engine_crawl_private)
+#     to_sql("id_count3", engine_data_test, df, type="update")
+#
+#
+# def sync_ids(fund_id):
+#     df = pd.read_sql(
+#         "SELECT fund_id,source_id FROM base.fund_nv_data_source_copy2 where fund_id = '{}'  GROUP BY source_id HAVING COUNT(*)>=3".format(
+#             fund_id), engine_base)
+#     return df
+#
+#
+# jr_list = sync_source("020003")
+#
+# JR = to_list(jr_list["matched_id"])
+#
+# for I in JR:
+#     yansuan(I, '020003')
+# check()
+# print("DOWN" + '\n' + now2)
