@@ -2,4 +2,4 @@
 # http://curl.haxx.se/rfc/cookie_spec.html
 # This is a generated file!  Do not edit.
 
-passport.jinfuzi.com	FALSE	/	FALSE		PHPSESSID	5djjduqmdrh6rscft144n785a7
+passport.jinfuzi.com	FALSE	/	FALSE		PHPSESSID	l3mm417qlm276p93rmsuolb2s5

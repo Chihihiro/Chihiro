@@ -216,7 +216,12 @@ def init_tyc(n=15):
         for ii in raw_tyc:
             tyc_word_in.append(ii[0])
         tyc_word_in = [x for x in tyc_word_in if x not in white_word]
-        tyc_word_in = tyc_word_in + ['号', '期', '类', '级', '份额']  # 如用于母子基金，这些是关键字
+        wps = ['号', '期', '类', '分级', '份额', '证券', '级','信托','集合','资产',
+               '管理计划', '资金', '投资', '单一','多客户', '指定客户','员工持股',
+               '基金','私募']# 如用于母子基金，这些是关键字
+
+
+        tyc_word_in = tyc_word_in + wps
         print(tyc_word_in)
     return tyc_word_in
 

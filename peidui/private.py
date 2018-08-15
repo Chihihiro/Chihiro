@@ -1,7 +1,15 @@
 from engine import *
 
 
-def df_fundaccount():
+def sub_wrong_to_none(x):
+    s = re.sub("\s|-| |--|---|无|%|暂未备案", "", x)
+    if s == "":
+        return None
+    else:
+        return s
+
+
+def df_fundaccount1():
     df_fundaccount = pd.read_sql("SELECT * FROM (SELECT fund_id,fund_name_amac,reg_code_amac \
      FROM x_fund_info_fundaccount WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010002' and is_used=1)\
@@ -12,7 +20,7 @@ def df_fundaccount():
     return df_fundaccount
 
 
-def df_private():
+def df_private1():
     df_private = pd.read_sql("SELECT * FROM (SELECT  fund_id \
     , fund_name_amac,reg_code_amac \
     FROM x_fund_info_private WHERE fund_id not in  \
@@ -24,7 +32,7 @@ def df_private():
     return df_private
 
 
-def df_securities():
+def df_securities1():
     df_securities = pd.read_sql("SELECT * FROM (SELECT   fund_id \
     , fund_name_amac,reg_code_amac FROM x_fund_info_securities WHERE fund_id not in \
     (SELECT source_id FROM base.id_match WHERE source='010004' and is_used=1)  \
@@ -55,6 +63,35 @@ def df_010006():
     df_futures.rename(columns={"fund_id": "source_id", "fund_name": "test_name", "reg_code": "reg_code_amac"},
                       inplace=True)
     return df_futures
+
+
+def df_020001():
+    df = pd.read_sql("SELECT * FROM (SELECT fund_id, \
+                fund_full_name, \
+                reg_code \
+                FROM d_fund_info  \
+                WHERE fund_id NOT IN (SELECT source_id FROM base.id_match where source='020001') \
+                and source_id = '020001'  \
+                ORDER BY version DESC ) AS T \
+                GROUP  BY T.fund_id", engine_crawl_private)
+    df["reg_code"] = df["reg_code"].apply(lambda x: sub_wrong_to_none(x) if type(x) is str else x)
+    df.rename(columns={"fund_id": "source_id", "fund_full_name": "test_name", "reg_code": "reg_code_amac"},
+                      inplace=True)
+    return df
+
+
+def df_020002():
+    df = pd.read_sql("select ma.fund_id,df.fund_full_name,df.reg_code FROM ( \
+                        SELECT MAX(version) as mm, fund_id from crawl_private.d_fund_info WHERE source_id = '020002' and is_used = 1 GROUP BY fund_id) as ma \
+                        JOIN crawl_private.d_fund_info as df \
+                        ON ma.mm = df.version  \
+                        and ma.fund_id = df.fund_id \
+                        WHERE ma.fund_id NOT IN (SELECT source_id from base.id_match where id_type = 1 and source = '020002') \
+                        AND ma.mm > 10", engine_crawl_private)
+    df["reg_code"] = df["reg_code"].apply(lambda x: sub_wrong_to_none(x) if type(x) is str else x)
+    df.rename(columns={"fund_id": "source_id", "fund_full_name": "test_name", "reg_code": "reg_code_amac"},
+                      inplace=True)
+    return df
 
 
 dict_table = {"010002": "x_fund_info_fundaccount",
@@ -261,23 +298,34 @@ def get_name(df1):
         df1.rename(columns={"fund_id": "source_id"}, inplace=True)
         return df1
 
-#
-fund_fundaccount = df_fundaccount()
-df1 = get_name(fund_fundaccount)
-over1 = id_match(df1, source_fundaccount)
+
+# fund_fundaccount1 = df_fundaccount1()
+# df1 = get_name(fund_fundaccount1)
+# over1 = id_match(df1, source_fundaccount)
 # to_sql("id_match", engine_base, over1, type="update")
 #
-fund_private = df_private()
-df2 = get_name(fund_private)
-over2 = id_match(df2, source_private)
+# fund_private1 = df_private1()
+# df2 = get_name(fund_private1)
+# over2 = id_match(df2, source_private)
 # to_sql("id_match", engine_base, over2, type="update")
-# #
-# fund_securities = df_securities()
-# df3 = get_name(fund_securities)
+#
+# fund_securities1 = df_securities1()
+# df3 = get_name(fund_securities1)
 # over3 = id_match(df3, source_securities)
 # to_sql("id_match", engine_base, over3, type="update")
-#
+# #
 # fund_futures = df_futures()
 # df4 = get_name(fund_futures)
 # over4 = id_match(df4, source_futures)
 # to_sql("id_match", engine_base, over4, type="update")
+
+
+df020001 = df_020001()
+df5 = get_name(df020001)
+over5 = id_match(df5, '020001')
+
+
+#
+# df020002 = df_020002()
+# df6 = get_name(df020002)
+# over6 = id_match(df6, '020002')

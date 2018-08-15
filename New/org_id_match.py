@@ -14,6 +14,6 @@ df["is_del"] = 0
 
 
 
-dataframe=org_id_match()
 
-# to_sql("org_id_match", engine_base, dataframe, type="update")
+
+to_sql("id_match", engine_base, df, type="update")

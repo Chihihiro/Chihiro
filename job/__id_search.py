@@ -65,7 +65,7 @@ def daterange(beginDate, endDate):
 
 def timeshow():
     all = []
-    a = daterange("2018-06-07", "2018-06-14")
+    a = daterange("2018-07-11", "2018-07-20") #2018-07-02，10
     for i in a:
         q = re.sub(r'2018-', '18', i)
         w = re.sub(r'-', '', q)
@@ -81,7 +81,7 @@ san2 = timeshow()  # ~~~~~~~~~~~~~~~~可在上面固定日期
 # san2=[180201.00000399]
 
 
-xx = list(range(0, 1500))
+xx = list(range(0, 3000))
 xx.pop(0)
 reall = []
 for date in san2:
@@ -102,7 +102,7 @@ engine3 = create_engine(
     "mysql+pymysql://{}:{}@{}:{}/{}".format('jr_admin_qxd', 'jr_admin_qxd', '182.254.128.241', 4171, 'crawl_private', ),
     connect_args={"charset": "utf8"}, echo=True, )
 for ids in reall:
-    break_count = 300  # 最大失败数量为10
+    break_count = 2300  # 最大失败数量为10
     while break_count > 0:
         id = ids.pop(0)
         jid = jiami_all(id)

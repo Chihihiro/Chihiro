@@ -9,11 +9,6 @@ now = time.strftime("%Y-%m-%d")
 now2 = time.strftime("%Y%m%d%H%M")
 
 
-# def of_id(id):
-#     all_id=str(id)+'.OF'
-#     return  all_id
-
-
 def crawl_benchmark(id):
     wind.start()  # 启动wind
     all_id = str(id) + '.OF'
@@ -67,14 +62,16 @@ def pu_all3():
 
 
 # --------------------------------------报表导出
-
+def sub_wrong_to_none(x):
+    s = re.sub("\s|-| |--|---|]|\[", "", x)
+    if s == "":
+        return None
+    else:
+        return s
 
 def daochu():
-    shanchu = "'519513',	'002437',	'003859',	'001368',	'004383',	'004384',	'004704',	'001568',	'002239',	'004539',	'004540',	'161630',	'511890','519131'"
-    # SELECT * FROM
-    # base_public.fund_info
-    # WHERE
-    # fund_status <> '终止'
+    ff = pd.read_sql("SELECT fund_id from base_public.fund_info where fund_status = '终止'", engine_base_public)
+    shanchu = sub_wrong_to_none(str(ff["fund_id"].tolist()))
     df = pd.read_sql("SELECT version,fund_id,fund_name,statistic_date,nav,added_nav,statistic_date_wind,nav_wind,added_nav_wind\
                     FROM fund_nv WHERE  version = '{}' AND fund_id NOT IN ({})".format(now, shanchu), engine5)
 
@@ -82,7 +79,6 @@ def daochu():
     df["differ_day"] = df["differ_day"].apply(lambda x: x.days)
     aa = df[df.differ_day < 0]
     a = len(aa)
-    # a=len(df["differ_day"]<0)
     df["速度慢的基金数量"] = None
     df.iloc[0, -1] = a
     df["fund_id"] = df["fund_id"].apply(lambda x: str(x) + ".OF")

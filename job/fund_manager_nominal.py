@@ -16,6 +16,7 @@ def main():
     df = pd.read_sql(sql, engine_base)
     df["org_type"] = "基金管理人"
     df["org_type_code"] = 2
+    df.rename(columns={"matched_id": "fund_id", "org_full_name": "org_name"}, inplace=True)
     to_sql("fund_org_mapping", engine_base, df, type="update")  # ignore
 
 
